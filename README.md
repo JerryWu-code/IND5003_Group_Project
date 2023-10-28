@@ -55,7 +55,7 @@ heat map: 最繁忙的时间和地点用深色表示
 
 ### Feature2: Prediction--Regional Counts/Price
 
-#### (1)区域PU上车U频数按时间 & 预测
+#### (1)区域PU上车频数按时间 & 预测
 
 #### (2)区域PU上车打车价格按时间 & 预测
 
