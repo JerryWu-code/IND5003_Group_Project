@@ -10,9 +10,9 @@ Here are the descriptions for **dataset** and **demo**:
 
 
 
-## 1.Dataset--Green Taxi in NY City
+## 1.Dataset
 
-### Green Taxi Dataset in New York City
+### Part1: Green Taxi Dataset in New York City
 
 - We Collected data dating from **Jan 2022** to **Jul 2023** from this [website](https://www.nyc.gov/site/tlc/businesses/green-cab.page).
 - Tracking **taxi service & accessibility** in the **boroughs in New City**.
@@ -20,6 +20,9 @@ Here are the descriptions for **dataset** and **demo**:
 
 **A fraction of pickups in the dataset originate far outside New York City's** **borders**. To streamline our analysis and accommodate limited computational resources, we **only considered taxi trips originating from locations within the** **defined area**.
 
+### Part2: Daily weather data in New York City
+
+### Part3: Location zone data corresponding to ID
 
 
 ## 2.Demo
@@ -52,7 +55,7 @@ heat map: 最繁忙的时间和地点用深色表示
 
 ### Feature2: Prediction--Regional Counts/Price
 
-#### (1)区域PU上车U频数按时间 & 预测
+#### (1)区域PU上车频数按时间 & 预测
 
 #### (2)区域PU上车打车价格按时间 & 预测
 
