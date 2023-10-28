@@ -4,7 +4,7 @@ This is the IND5003 Group Project Repo. And this is the members' table of our te
 
 | 1         | 2              | 3           | 4         | 5          |
 | --------- | -------------- | ----------- | --------- | ---------- |
-| WU QILONG | XIANG XIAONENG | DONG XINYUE | QI SHUOLI | JIN SHUOLI |
+| WU QILONG | XIANG XIAONENG | DONG XINYUE | QI SHUOLI | JIN YIXUAN |
 
 Here are the descriptions for **dataset** and **demo**:
 
