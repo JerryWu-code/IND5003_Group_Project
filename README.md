@@ -29,9 +29,10 @@ Here are the descriptions for **dataset** and **demo**:
 
 ### Feature1: DashBoard
 
-#### (1)短途和长途的区别分析：
+#### (1)Analysis of difference between short distance and long distance：
+The difference between short and long trips is a key aspect of taxi services. "trip_distance" is the main metric that classifies a trip as short or long. The "PUtime" and "DOtime" variables are used to create time series data that provides insight into the temporal aspects of these journeys. In addition, "pick-up zones" and "pick-up zones" are used to identify popular locations associated with short and long distance trips. To better understand these differences, the analysis also considers the variables "passenger_count," "RatecodeID," and "payment_type." These aspects help to assess potential differences in passenger behaviour, preferred rate codes and payment methods between short and long haul trips.
 
-trip_distance判段长短途，"PUtime", "DOtime"做时钟图，’'pickup zone', 'dropoff zone'用来计算长短途的热门地点，最后"passenger_count", "RatecodeID", "payment_type"看看长短途在这个三个方面有没有差异。这个问题可以帮助出租车公司更好地了解他们的客户和市场需求。他们可以根据这些差异来制定更精细的策略，例如优化车辆分配，提供不同的服务水平，或者调整价格策略，为公司提供运营和市场营销决策提供有力的依据。
+This analysis is crucial for taxi service providers as it enables them to better understand their customers and effectively align their services with market needs. By recognizing these differences, taxi companies can develop sound strategies. These strategies may include optimizing vehicle configurations, offering diversified service levels, and adjusting pricing strategies to provide valuable insights into operational and marketing decisions, enabling the company to improve service levels and meet broader customer needs.
 
 #### (2)哪些地区上车下车最多: 
 'PUcount', 'DOcount'
@@ -55,5 +56,8 @@ Utilizing the dataset, predictive models can be created, such as SVM, XgBoost, R
 
 
 ### Feature3: Vehicle Scheduling
+Vehicle scheduling involves the strategic allocation of vehicles based on a combination of factors,  primarily focusing on density and proximity. These two critical factors contribute to the computation of a score that  guides the dispatch of vehicles to various regions.
 
-#### 车辆按照 density高 & 距离近 两个因素计算的分数，对不同区域进行调度
+Density, as a key determinant, highlights the concentration of service demand in specific areas. The higher the density of the drop-off location, That means the more traffic there is in this area, the more traffic can be diverted. Simultaneously, proximity considers the geographical closeness of these areas to the available vehicle fleet.
+
+By assessing both density and proximity, a score is generated for each area, allowing for the prioritization of vehicle dispatch. Areas with high scores—indicating a combination of high service demand and proximity to the vehicle pool—are given precedence in scheduling. This approach optimizes the utilization  of resources and enhances the efficiency of transportation services, ensuring that vehicles are dispatched to areas where they are most needed. Consequently, vehicle scheduling based on density and proximity plays a pivotal role in meeting customer demands effectively and  improving the overall performance of the transportation system.
