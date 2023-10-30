@@ -48,6 +48,8 @@ The demand might be related to the timely, daily, weekly, and monthly basis, so 
 
 #### (1)区域PU上车频数按时间 & 预测
 
+Utilizing the dataset, predictive models can be created, such as SVM, XgBoost, RandomForest. These models can forecast future pick-up frequencies within certain time periods and certain areas, aiding companies in deploying taxis strategically. Real-time predictions allow companies to dynamically adjust their fleet, ensuring taxis are where they are needed most and maximizing the profit. The precision of the prediction is analyzed after the prediction to ensure the preciseness.
+
 #### (2)区域PU上车打车价格按时间 & 预测
 
 
