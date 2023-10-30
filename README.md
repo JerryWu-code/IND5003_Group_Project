@@ -23,7 +23,8 @@ Here are the descriptions for **dataset** and **demo**:
 ### Part2: Daily weather data in New York City
 
 ### Part3: Location zone data corresponding to ID
-
+- We Collected data **Taxi Zone Maps and Lookup Tables** from this [website](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page).
+- Get the zone corresponding to each region ID
 
 ## 2.Demo
 
