@@ -39,7 +39,7 @@ the top 3 pickup zones are...
 the top 3 drop-off zones are...
 Zones with most pickups; Zones with most drop-offs; 
 
-#### (3)打车高峰期和非高峰是什么时候: 
+#### (3)打车高峰期和非高峰是什么时候: Peak and Off-Peak Times
 Analyzing peak and off-peak times for taxi services is crucial for optimizing operations, improving customer satisfaction, and maximizing profits for a taxi company. Consequently, we need to evaluate based on peak and off-peak times for taxi services. We may need to deploy more taxis during high demand ensure efficient service and reduce the taxi count during off-peak. 
 
 The demand might be related to the timely, daily, weekly, and monthly basis, so we have a brief analysis of them using line charts and histograms. Additionally, the demand in different locations should be various, so we visualize the demand based on geographical information using the heated map. What's more, the weather could also be a factor in people choosing or not choosing a taxi to go out. Accordingly, we need the dataset: pickuptime, dropofftime, pickuparea, dropoffarea, and whether.
