@@ -27,18 +27,22 @@ Here are the descriptions for **dataset** and **demo**:
 ### Part2: Daily weather data in New York City
 
 - We Collected comprehensive daily weather data for New York City dating from **Jan 2022** to **Jul 2023** from this [website](https://www.ncei.noaa.gov/access/search/index).
-- The dataset provides in-depth weather metrics for each day, including:<br />
-  **Dew Point (ADPT):** Represents the temperature below which water droplets begin to condense from the air, indicating the moisture level of the atmosphere.<br />
-  **Atmospheric Sea Level Pressure (ASLP):** This measures the atmospheric pressure at sea level, offering insights into weather conditions and patterns.<br />
-  **Wet Bulb Temperature (AWBT):** Indicates the temperature a parcel of air would have if cooled to saturation by the evaporation of water into it.<br />
-  **Average Wind Speed (AWND):** Provides the average speed of the wind, which can impact mobility patterns within the city.
 - Integrating this weather data with the taxi dataset, we aim to delve into the interplay between weather conditions and taxi demand, potentially revealing significant correlations or causative factors. Our overarching objective is to arm taxi service providers with predictive insights, allowing them to anticipate demand shifts based on upcoming weather forecasts, ultimately enhancing service efficiency and customer satisfaction.
+- The dataset provides in-depth weather metrics for each day, including:
+
+|                NAME                |  Brief   |                         Desciptions                          |
+| :--------------------------------: | :------: | :----------------------------------------------------------: |
+|           **Dew Point**            | **ADPT** | Represents the temperature below which water droplets begin to condense from the air, indicating the moisture level of the atmosphere. |
+| **Atmospheric Sea Level Pressure** | **ASLP** | This measures the atmospheric pressure at sea level, offering insights into weather conditions and patterns. |
+|      **Wet Bulb Temperature**      | **AWBT** | Indicates the temperature a parcel of air would have if cooled to saturation by the evaporation of water into it. |
+|       **Average Wind Speed**       | **AWND** | Provides the average speed of the wind, which can impact mobility patterns within the city. |
 
 
 
 ### Part3: Location zone data corresponding to ID
+
 - We collected data **Taxi Zone Maps and Lookup Tables** from this [website](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) and also get **Whole US ZIP Code Tabulation Areas**(shapefile: "~.shp") for geo-visualization from this [website](https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2022&layergroup=ZIP+Code+Tabulation+Areas).
-- Get the zone corresponding to each region ID
+- Get the zone corresponding to each region ID.
 
 
 
@@ -54,6 +58,7 @@ The difference between short and long trips is a key aspect of taxi services. "t
 This analysis is crucial for taxi service providers as it enables them to better understand their customers and effectively align their services with market needs. By recognizing these differences, taxi companies can **develop sound strategies**. These strategies may **include optimizing vehicle configurations, offering diversified service levels, and adjusting pricing strategies** to provide valuable insights into operational and marketing decisions, enabling the company to improve service levels and meet broader customer needs.
 
 #### (2)Which areas have the most boarding and alighting:
+
 Based on our analysis of the dataset, certain zones consistently show higher pickup and dropoff frequencies. Using the 'PUcount' and 'DOcount' metrics, we identified the top 3 zones for both pickups and dropoffs. The zones with the highest pickups might indicate popular residential areas or business hubs, while zones with the highest dropoffs could signify popular destinations, commercial areas, or tourist spots. Understanding these trends **helps taxi service providers optimize their fleet deployment to cater to the highest demand areas effectively**.
 
 #### (3)Peak and Off-Peak Times
