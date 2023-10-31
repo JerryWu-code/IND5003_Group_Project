@@ -23,6 +23,7 @@ Here are the descriptions for **dataset** and **demo**:
 ### Part2: Daily weather data in New York City
 - We Collected comprehensive daily weather data for New York City dating from **Jan 2022** to **Jul 2023** from this [website](https://www.ncei.noaa.gov/access/search/index).
 - The dataset provides in-depth weather metrics for each day, including:
+
 **Dew Point (ADPT):** Represents the temperature below which water droplets begin to condense from the air, indicating the moisture level of the atmosphere.
 **Atmospheric Sea Level Pressure (ASLP):** This measures the atmospheric pressure at sea level, offering insights into weather conditions and patterns.
 **Wet Bulb Temperature (AWBT):** Indicates the temperature a parcel of air would have if cooled to saturation by the evaporation of water into it.
@@ -42,26 +43,22 @@ The difference between short and long trips is a key aspect of taxi services. "t
 
 This analysis is crucial for taxi service providers as it enables them to better understand their customers and effectively align their services with market needs. By recognizing these differences, taxi companies can develop sound strategies. These strategies may include optimizing vehicle configurations, offering diversified service levels, and adjusting pricing strategies to provide valuable insights into operational and marketing decisions, enabling the company to improve service levels and meet broader customer needs.
 
-#### (2)哪些地区上车下车最多: 
-'PUcount', 'DOcount'
-the top 3 pickup zones are...
-the top 3 drop-off zones are...
-Zones with most pickups; Zones with most drop-offs; 
+#### (2)Which areas have the most boarding and alighting:
+Based on our analysis of the dataset, certain zones consistently show higher pickup and dropoff frequencies. Using the 'PUcount' and 'DOcount' metrics, we identified the top 3 zones for both pickups and dropoffs. The zones with the highest pickups might indicate popular residential areas or business hubs, while zones with the highest dropoffs could signify popular destinations, commercial areas, or tourist spots. Understanding these trends helps taxi service providers optimize their fleet deployment to cater to the highest demand areas effectively.
 
-#### (3)打车高峰期和非高峰是什么时候: Peak and Off-Peak Times
+#### (3)Peak and Off-Peak Times
 Analyzing peak and off-peak times for taxi services is crucial for optimizing operations, improving customer satisfaction, and maximizing profits for a taxi company. Consequently, we need to evaluate based on peak and off-peak times for taxi services. We may need to deploy more taxis during high demand ensure efficient service and reduce the taxi count during off-peak. 
 
 The demand might be related to the timely, daily, weekly, and monthly basis, so we have a brief analysis of them using line charts and histograms. Additionally, the demand in different locations should be various, so we visualize the demand based on geographical information using the heated map. What's more, the weather could also be a factor in people choosing or not choosing a taxi to go out. Accordingly, we need the dataset: pickuptime, dropofftime, pickuparea, dropoffarea, and whether.
 
 ### Feature2: Prediction--Regional Counts/Price
 
-#### (1)区域PU上车频数按时间 & 预测
+#### (1)Regional PU Boarding Frequency by Time & Predictions
 
 Utilizing the dataset, predictive models can be created, such as SVM, XgBoost, RandomForest. These models can forecast future pick-up frequencies within certain time periods and certain areas, aiding companies in deploying taxis strategically. Real-time predictions allow companies to dynamically adjust their fleet, ensuring taxis are where they are needed most and maximizing the profit. The precision of the prediction is analyzed after the prediction to ensure the preciseness.
 
-#### (2)区域PU上车打车价格按时间 & 预测
-
-
+#### (2)Regional PU Boarding Taxi Prices by Time & Predictions
+Using our dataset, we can develop predictive models to forecast the average taxi fare for pickups in different regions over time. This can be achieved using regression models, neural networks, or time series forecasting methods. By predicting taxi fare trends, service providers can develop dynamic pricing strategies, offering discounts during low-demand periods and surge pricing during high-demand times. These strategies can increase revenue and ensure that the taxi fleet is effectively utilized. Moreover, by providing fare predictions to customers in advance, taxi services can enhance transparency and improve customer trust.
 
 ### Feature3: Vehicle Scheduling
 Vehicle scheduling involves the strategic allocation of vehicles based on a combination of factors,  primarily focusing on density and proximity. These two critical factors contribute to the computation of a score that  guides the dispatch of vehicles to various regions.
