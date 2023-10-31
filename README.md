@@ -22,11 +22,11 @@ Here are the descriptions for **dataset** and **demo**:
 
 ### Part2: Daily weather data in New York City
 - We Collected comprehensive daily weather data for New York City dating from **Jan 2022** to **Jul 2023** from this [website](https://www.ncei.noaa.gov/access/search/index).
-- The dataset provides in-depth weather metrics for each day, including:
--- **Dew Point (ADPT):** Represents the temperature below which water droplets begin to condense from the air, indicating the moisture level of the atmosphere.
--- **Atmospheric Sea Level Pressure (ASLP):** This measures the atmospheric pressure at sea level, offering insights into weather conditions and patterns.
--- **Wet Bulb Temperature (AWBT):** Indicates the temperature a parcel of air would have if cooled to saturation by the evaporation of water into it.
--- **Average Wind Speed (AWND):** Provides the average speed of the wind, which can impact mobility patterns within the city.
+- The dataset provides in-depth weather metrics for each day, including:<br />
+  **Dew Point (ADPT):** Represents the temperature below which water droplets begin to condense from the air, indicating the moisture level of the atmosphere.<br />
+  **Atmospheric Sea Level Pressure (ASLP):** This measures the atmospheric pressure at sea level, offering insights into weather conditions and patterns.<br />
+  **Wet Bulb Temperature (AWBT):** Indicates the temperature a parcel of air would have if cooled to saturation by the evaporation of water into it.<br />
+  **Average Wind Speed (AWND):** Provides the average speed of the wind, which can impact mobility patterns within the city.
 - Integrating this weather data with the taxi dataset, we aim to delve into the interplay between weather conditions and taxi demand, potentially revealing significant correlations or causative factors. Our overarching objective is to arm taxi service providers with predictive insights, allowing them to anticipate demand shifts based on upcoming weather forecasts, ultimately enhancing service efficiency and customer satisfaction.
 
 ### Part3: Location zone data corresponding to ID
