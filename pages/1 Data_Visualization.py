@@ -1,6 +1,6 @@
 import sys
 sys.path.append("..")  # 将上级目录添加到 sys.path 以便于导入 my_scripts
-from my_scripts.function import Visualization
+from my_scripts.Data_loader import Visualization
 import streamlit as st
 
 vis = Visualization()
