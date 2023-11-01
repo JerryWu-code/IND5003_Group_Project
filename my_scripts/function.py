@@ -178,7 +178,7 @@ class Visualization:
         fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(20, 12))
         fig.suptitle("24-hour Analysis for Weekdays vs. Weekends", fontsize=20)
 
-        def plot_daytype_analysis(ax, data, day_type, metric, ylabel):
+    def plot_daytype_analysis(ax, data, day_type, metric, ylabel):
             subset = data[data['day_type'] == day_type]
             ax.plot(subset['pickup_hour'], subset[metric], marker="o")
             ax.set_title(f"{day_type} - {ylabel}")
