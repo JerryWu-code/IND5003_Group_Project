@@ -1,10 +1,8 @@
-import sys
-sys.path.append("..")  # 将上级目录添加到 sys.path 以便于导入 my_scripts
-from my_scripts.Data_loader import Visualization
+from my_scripts import Visualization
 import streamlit as st
 
-vis = Visualization()
-data_path = '../data/green_sum_2201-2307_v4.parquet'  # 根据您的数据位置进行修改
+vis = Visualization.Visualization()
+data_path = '../data/green_sum_2022-01-01_2023-07-31_final.parquet'  # 根据您的数据位置进行修改
 
 def main():
     st.title("Data Visualization App")
