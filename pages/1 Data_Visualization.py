@@ -1,8 +1,20 @@
-from my_scripts import Visualization
+from my_scripts import Visualization, Data_loader
 import streamlit as st
 
-data_path = 'data/green_sum_final.parquet'
-vis = Visualization.Visualization(data_path=data_path, if_st=True)
+# Set path
+raw_dir = 'data/green_raw/'
+output_dir = 'data/green.parquet'
+nyc_shapefile_dir = 'data/NYC_Shapefile/NYC.shp'
+
+# Initialize a data_loader
+data_loader = Data_loader.Data_loader(raw_dir=raw_dir, output_dir=output_dir,
+                                      nyc_shapefile_dir=nyc_shapefile_dir)
+# Set time range
+time_range = "2022-01-01_2023-07-31"
+
+# Get the data
+df = data_loader.get_final_processed_df(time_range=time_range, export_final=False)
+vis = Visualization.Visualization(data=df, if_st=True)
 
 def main():
     st.title("Data Visualization App")
@@ -20,8 +32,8 @@ def main():
         "Factors affecting Trip Type": vis.plot_trip_type_factors,
         "Passenger Analysis": vis.plot_passenger_analysis,
         "NYC_Hailing_Counts_Heatmap": vis.NYC_Heatmap_hailing_counts,
-        # "Regional Analysis": vis.region_analysis(df_merge_geo, proj),
-        # "Interactive Regional Analysis": plotly_region_interactgraph(df_merge_geo, target='Fare')
+        "Regional Analysis": vis.region_analysis(df_merge_geo, proj),
+        "Interactive Regional Analysis": plotly_region_interactgraph(df_merge_geo, target='Fare')
     }
 
 

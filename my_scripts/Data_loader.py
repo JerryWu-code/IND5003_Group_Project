@@ -10,21 +10,26 @@ import pyarrow.parquet as pq
 import geopandas as gpd
 import geoplot as gplt
 import geoplot.crs as gcrs
+import numpy as np
 
 
 class Data_loader:
-    def __init__(self):
-        self.raw_dir = 'data/green_raw/'
-        self.output_dir = 'data/green_sum.parquet'
-        self.nyc_shapefile_dir = 'data/NYC_Shapefile/NYC.shp'
+    def __init__(self,
+                 raw_dir='data/green_raw/',
+                 output_dir='data/green_sum.parquet',
+                 nyc_shapefile_dir='data/NYC_Shapefile/NYC.shp'):
+        self.raw_dir = raw_dir
+        self.output_dir = output_dir
+        self.nyc_shapefile_dir = nyc_shapefile_dir
         self.api_key = None
 
-    def raw_data_agg(self, time_range=None):
+    def raw_data_agg(self, time_range=None, export_raw=False):
         """
         Attention!!
         Whole data we've collected ranging from "2019-01_2023-07", you can't select data out of this range!!!
         Export and get the name of output file with the time_range label, and get the dataframe of the output.
 
+        :param export_raw: whether you choose to export or not
         :param time_range: set the pick-up time_range of the data, and the default value is False(no filter)
         :return: tuple(output_dir, result)
                  output_dir: path of new_file
@@ -47,19 +52,21 @@ class Data_loader:
                         pbar.update(1)
 
         if not time_range:
-            result.to_parquet(self.output_dir, index=False)
-            print("Extract the data ranging from 2019-01-01 to 2023-07-31. \nOutput to this path: {0}".format(
-                self.output_dir))
+            if export_raw:
+                result.to_parquet(self.output_dir, index=False)
+                print("Extract the data ranging from 2019-01-01 to 2023-07-31. \nOutput to this path: {0}".format(
+                    self.output_dir))
         else:
             start = time_range.split("_")[0]
             end = time_range.split("_")[1]
-            self.output_dir = self.output_dir.split('.')[0] + "_{}.".format(time_range) + self.output_dir.split('.')[1]
             result = result[(result['lpep_pickup_datetime'] >= start) &
                             (end >= result['lpep_pickup_datetime'])].reset_index(drop=True)
-            result.to_parquet(self.output_dir, index=False)
-
-            print("Extract the data ranging from {0} to {1}. \nOutput to this path: {2}".format(
-                start, end, self.output_dir))
+            if export_raw:
+                self.output_dir = "{}_{}.par{}".format(self.output_dir.split('.par')[0], time_range,
+                                                    self.output_dir.split('.par')[1])
+                result.to_parquet(self.output_dir, index=False)
+                print("Extract the raw taxi data ranging from {0} to {1}. \nOutput to this path: {2}".format(
+                    start, end, self.output_dir))
 
         return self.output_dir, result
 
@@ -135,11 +142,92 @@ class Data_loader:
         df_merge_geo_zip = gpd.GeoDataFrame(df_merge_geo_zip, geometry='geometry')
         df_merge_geo_borough = gpd.GeoDataFrame(df_merge_geo_borough, geometry='geometry')
 
-        return df_merge_geo_zip, df_merge_geo_borough, proj
+        return df_merge_geo_zip, df_merge_geo_borough, proj, nyc_boroughs
+
+    def get_final_processed_df(self, time_range, export_final=False):
+        rela_path = '{0}data/'.format(self.raw_dir.split('data/')[0])
+        # 1.Aggregate selected raw taxi data
+        _, df = self.raw_data_agg(time_range=time_range, export_raw=False)
+        df = df.drop(columns=['ehail_fee'])
+
+        # 2.Merge location data
+        path1 = rela_path + 'Location/Area_LatLong_Zipcode.csv'
+        df_loc_new = pd.read_csv(path1)
+        no_loc_con = ((df['PULocationID'].isin([264, 265])) |
+                      (df['DOLocationID'].isin([264, 265])))
+        df = df[-no_loc_con]
+        df = pd.merge(df, df_loc_new, left_on='PULocationID', right_on='LocationID', how='left')
+        df = df.rename(
+            columns={'Borough': 'PU_Borough', 'Zone': 'PU_Zone', 'LatLong': 'PU_LatLong', 'Zipcode': 'PU_Zcode'})
+        df = pd.merge(df, df_loc_new, left_on='DOLocationID', right_on='LocationID', how='left')
+        df = df.rename(
+            columns={'Borough': 'DO_Borough', 'Zone': 'DO_Zone', 'LatLong': 'DO_LatLong', 'Zipcode': 'DO_Zcode'})
+        df = df.drop(columns=['LocationID_x', 'LocationID_y', 'PULocationID', 'DOLocationID'])
+
+        # 3.Merge weather data
+        path2 = rela_path + 'Weather/3503035.csv'
+        df_weather = pd.read_csv(path2)
+        df_weather = df_weather.loc[:, ['DATE', 'PRCP', 'TMAX', 'TMIN']]
+        df_weather['AVG_T'] = (df_weather['TMAX'] + df_weather['TMIN']) / 2
+        df_weather['TMIN'] = df_weather['TMIN'].apply(self.fahrenheit_to_celsius)
+        df_weather['TMAX'] = df_weather['TMAX'].apply(self.fahrenheit_to_celsius)
+        df_weather['AVG_T'] = df_weather['AVG_T'].apply(self.fahrenheit_to_celsius)
+        df['DATE'] = df['lpep_pickup_datetime'].apply(lambda x: str(x)[:10])
+        df = pd.merge(df, df_weather, on='DATE', how='left')
+
+        df['PU_Day_Count'] = df.groupby(
+            by=['DATE', 'PU_Zcode'])['VendorID'].transform('count')
+        df['PU_Day_Avg_Fare'] = df.groupby(
+            by=['DATE', 'PU_Zcode'])['total_amount'].transform(
+            lambda x: round(np.average(x), 2))
+
+        # 4.Add new features, rename and reorganize
+        df_new = df[[
+            'DATE', 'VendorID', 'lpep_pickup_datetime', 'lpep_dropoff_datetime',
+            'store_and_fwd_flag', 'RatecodeID', 'passenger_count', 'trip_distance',
+            'fare_amount', 'extra', 'mta_tax', 'tip_amount', 'tolls_amount',
+            'improvement_surcharge', 'total_amount', 'payment_type', 'trip_type',
+            'congestion_surcharge', 'PRCP', 'TMAX', 'TMIN', 'AVG_T', 'PU_Day_Count',
+            'PU_Day_Avg_Fare', 'PU_Borough', 'DO_Borough', 'PU_Zone', 'DO_Zone',
+            'PU_LatLong', 'DO_LatLong', 'PU_Zcode', 'DO_Zcode'
+        ]].copy()
+        df_new = df_new.rename(
+            columns={
+                'lpep_pickup_datetime': 'PU_time',
+                'lpep_dropoff_datetime': 'DO_time',
+                'trip_distance': 'distance',
+                'PRCP': 'Rainfall'
+            })
+        df_new["PU_LatLong"] = df_new["PU_LatLong"].apply(eval)
+        df_new["DO_LatLong"] = df_new["DO_LatLong"].apply(eval)
+
+        # Finally we just use df_new
+        if export_final:
+            print(self.output_dir)
+            self.output_dir = "{}_{}_final.par{}".format(self.output_dir.split('.par')[0], time_range,
+                                                      self.output_dir.split('.par')[1])
+            df_new.to_parquet(self.output_dir, index=False)
+            start = time_range.split("_")[0]
+            end = time_range.split("_")[1]
+            print("Extract the final merged data ranging from {0} to {1}. \nOutput to this path: {2}".format(
+                start, end, self.output_dir))
+
+        return df_new
 
 
 if __name__ == "__main__":
-    # Aggregate raw data to a time-ranged file
-    data_loader = Data_loader()
+    # Set path
+    raw_dir = '../data/green_raw/'
+    output_dir = '../data/green.parquet'
+    nyc_shapefile_dir = '../data/NYC_Shapefile/NYC.shp'
+
+    # Initialize a data_loader
+    data_loader = Data_loader(raw_dir=raw_dir, output_dir=output_dir, nyc_shapefile_dir=nyc_shapefile_dir)
+
+    # Set time range
     time_range = "2022-01-01_2023-07-31"
-    new_file_dir = data_loader.raw_data_agg(time_range)
+    # _, df_raw = data_loader.raw_data_agg(time_range=time_range, export_raw=True)
+    df = data_loader.get_final_processed_df(time_range=time_range, export_final=False)
+
+    df_merge_geo_zip, df_merge_geo_borough, proj, _ = data_loader.load_merged_geodata(df)
+    print(df_merge_geo_borough)

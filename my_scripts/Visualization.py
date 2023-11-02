@@ -15,11 +15,11 @@ from my_scripts import Data_loader
 
 
 class Visualization:
-    def __init__(self, data_path, if_st=True):
-        da = Data_loader
+    def __init__(self, data, if_st=True):
+        self.data = data
         self.if_st = if_st
-        self.data = pq.read_table(data_path).to_pandas()
-        # self.df_merge_geo_zip, self.df_merge_geo_borough, self.proj = da.load_merged_geodata(self.data)
+        self.df_merge_geo_zip, self.df_merge_geo_borough, self.proj, self.nyc_boroughs = data_loader.load_merged_geodata(
+            data)
 
     def plot_top_zones(self, filter_con=None):
         data = self.data
@@ -488,19 +488,24 @@ class Visualization:
         else:
             return san_map
 
-    def region_analysis(self, df_merge_geo, proj, filter_con=None):
+    def region_analysis(self, area_range='borough', filter_con=None):
         def plot_state_to_ax(column, ax, df_draw_avg):
             gplt.choropleth(df_draw_avg.loc[:, [column, 'geometry']],
                             hue=column,
                             cmap='viridis',  # rainbow
                             linewidth=1.0,
                             ax=ax)
-            gplt.polyplot(nyc_boroughs, edgecolor='black', linewidth=1, ax=ax)
+            gplt.polyplot(self.nyc_boroughs, edgecolor='black', linewidth=1, ax=ax)
+
+        if area_range == 'borough':
+            df_merge_geo = self.df_merge_geo_borough
+        elif area_range == 'zip':
+            df_merge_geo = self.df_merge_geo_zip
 
         region_column = [i for i in list(df_merge_geo.columns) if i.startswith("PU")][0]
         df_draw_avg = df_merge_geo.set_index(region_column).loc[:, ["Frequency", 'Fare', 'geometry']]
 
-        fig, axes = plt.subplots(1, 2, figsize=(12, 6), subplot_kw={'projection': proj})
+        fig, axes = plt.subplots(1, 2, figsize=(12, 6), subplot_kw={'projection': self.proj})
         plt.suptitle('Green Taxi by {}, NYC'.format(region_column.split('_')[1]), fontsize=16)
 
         plot_state_to_ax('Frequency', axes[0], df_draw_avg)
@@ -515,7 +520,12 @@ class Visualization:
         else:
             plt.show()
 
-    def plotly_region_interactgraph(self, df_merge_geo, target='Fare', filter_con=None):  # or set "Frequency"
+    def plotly_region_interactgraph(self, area_range='borough', target='Fare', filter_con=None):  # or set "Frequency"
+        if area_range == 'borough':
+            df_merge_geo = self.df_merge_geo_borough
+        elif area_range == 'zip':
+            df_merge_geo = self.df_merge_geo_zip
+
         region_column = [i for i in list(df_merge_geo.columns) if i.startswith("PU")][0]
         df_draw_avg = df_merge_geo.set_index(region_column).loc[:, ["Frequency", 'Fare', 'geometry']]
 
@@ -541,6 +551,20 @@ class Visualization:
 
 
 if __name__ == "__main__":
-    data_path = '../data/green_sum_final.parquet'
-    vis = Visualization(data_path=data_path, if_st=False)
-    vis.plot_24hr_analysis(data_path)
+    # Set path
+    raw_dir = '../data/green_raw/'
+    output_dir = '../data/green.parquet'
+    nyc_shapefile_dir = '../data/NYC_Shapefile/NYC.shp'
+
+    # Initialize a data_loader
+    data_loader = Data_loader.Data_loader(raw_dir=raw_dir, output_dir=output_dir,
+                                          nyc_shapefile_dir=nyc_shapefile_dir)
+    # Set time range
+    time_range = "2022-01-01_2023-07-31"
+
+    # Get the data
+    df = data_loader.get_final_processed_df(time_range=time_range, export_final=False)
+
+    vis = Visualization(data=df, if_st=False)
+    # vis.region_analysis(area_range='borough')  # or 'zip'
+    vis.plotly_region_interactgraph(area_range='borough', target='Fare', filter_con=None)
