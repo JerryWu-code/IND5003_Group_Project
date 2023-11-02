@@ -38,18 +38,24 @@ class Data_loader:
         result = pd.DataFrame()
         file_lst = []
 
-        total_files = sum(
-            [len(files) for root, dirs, files in os.walk(self.raw_dir) if
-             any(fname.endswith('.parquet') for fname in files)])
-        with tqdm.tqdm(total=total_files) as pbar:
-            for root, dirs, files in os.walk(self.raw_dir):
-                for file_name in files:
-                    if file_name.endswith('.parquet'):
-                        file_lst.append(file_name)
-                        path = self.raw_dir + file_name
-                        data = pq.read_table(path).to_pandas()
-                        result = pd.concat([result, data])
-                        pbar.update(1)
+        whole_files = [sorted(files) for root, dirs, files in os.walk(self.raw_dir) if
+                       any(fname.endswith('.parquet') for fname in files)][0]
+
+        start_index = whole_files.index('green_tripdata_{}.parquet'.format(time_range.split('_')[0][:7]))
+        end_index = whole_files.index('green_tripdata_{}.parquet'.format(time_range.split('_')[1][:7])) + 1
+
+        run_files = whole_files[start_index:end_index]
+        num_run_files = len(run_files)
+
+        with tqdm.tqdm(total=num_run_files) as pbar:
+            for file_name in run_files:
+                if file_name.endswith('.parquet'):
+                    file_lst.append(file_name)
+                    path = self.raw_dir + file_name
+                    data = pq.read_table(path).to_pandas()
+                    result = pd.concat([result, data])
+                    pbar.update(1)
+        print("Finish loading raw data!")
 
         if not time_range:
             if export_raw:
@@ -63,7 +69,7 @@ class Data_loader:
                             (end >= result['lpep_pickup_datetime'])].reset_index(drop=True)
             if export_raw:
                 self.output_dir = "{}_{}.par{}".format(self.output_dir.split('.par')[0], time_range,
-                                                    self.output_dir.split('.par')[1])
+                                                       self.output_dir.split('.par')[1])
                 result.to_parquet(self.output_dir, index=False)
                 print("Extract the raw taxi data ranging from {0} to {1}. \nOutput to this path: {2}".format(
                     start, end, self.output_dir))
@@ -205,12 +211,14 @@ class Data_loader:
         if export_final:
             print(self.output_dir)
             self.output_dir = "{}_{}_final.par{}".format(self.output_dir.split('.par')[0], time_range,
-                                                      self.output_dir.split('.par')[1])
+                                                         self.output_dir.split('.par')[1])
             df_new.to_parquet(self.output_dir, index=False)
             start = time_range.split("_")[0]
             end = time_range.split("_")[1]
             print("Extract the final merged data ranging from {0} to {1}. \nOutput to this path: {2}".format(
                 start, end, self.output_dir))
+
+        print("Finish loading the processed final data!")
 
         return df_new
 
