@@ -45,7 +45,7 @@
 43,44,Staten Island,Charleston/Tottenville,"(40.5083408, -74.23554039999999)",10307
 44,45,Manhattan,Chinatown,"(40.7157509, -73.9970307)",10013
 45,46,Bronx,City Island,"(40.8468202, -73.7874983)",10464
-46,47,Bronx,Claremont/Bathgate,"(40.7127753, -74.0059728)",10007
+46,47,Bronx,Claremont/Bathgate,"(55.9024, -3.643118)",EH48 4PP
 47,48,Manhattan,Clinton East,"(40.7637581, -73.9918181)",10019
 48,49,Brooklyn,Clinton Hill,"(40.6896834, -73.9661144)",11205
 49,50,Manhattan,Clinton West,"(40.7628785, -73.9940134)",10036
@@ -198,7 +198,7 @@
 196,197,Queens,Richmond Hill,"(40.6999853, -73.8310309)",11418
 197,198,Queens,Ridgewood,"(40.7043986, -73.9018292)",11385
 198,199,Bronx,Rikers Island,"(40.79312770000001, -73.88601)",11370
-199,200,Bronx,Riverdale/North Riverdale/Fieldston,"(40.9058718, -73.9040759)",10471
+199,200,Bronx,Riverdale/North Riverdale/Fieldston,"(40.8964814, -73.9023362)",10471
 200,201,Queens,Rockaway Park,"(40.57978629999999, -73.8372237)",11694
 201,202,Manhattan,Roosevelt Island,"(40.76050310000001, -73.9509934)",10044
 202,203,Queens,Rosedale,"(40.6575584, -73.7330753)",11422
@@ -253,7 +253,7 @@
 251,252,Queens,Whitestone,"(40.7920449, -73.8095574)",11357
 252,253,Queens,Willets Point,"(40.7606911, -73.840436)",11368
 253,254,Bronx,Williamsbridge/Olinville,"(40.8550982, -73.8551072)",10461
-254,255,Brooklyn,Williamsburg (North Side),"(40.7162503, -73.9585348)",11211
+254,255,Brooklyn,Williamsburg (North Side),"(40.71492, -73.9528472)",11211
 255,256,Brooklyn,Williamsburg (South Side),"(40.70824229999999, -73.9571487)",11211
 256,257,Brooklyn,Windsor Terrace,"(40.6539346, -73.9756567)",11218
 257,258,Queens,Woodhaven,"(40.6901366, -73.8566087)",11421

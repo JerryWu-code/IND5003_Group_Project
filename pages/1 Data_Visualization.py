@@ -1,8 +1,8 @@
 from my_scripts import Visualization
 import streamlit as st
 
-vis = Visualization.Visualization()
-data_path = '../data/green_sum_2022-01-01_2023-07-31_final.parquet'  # 根据您的数据位置进行修改
+data_path = 'data/green_sum_final.parquet'
+vis = Visualization.Visualization(data_path=data_path, if_st=True)
 
 def main():
     st.title("Data Visualization App")
@@ -18,13 +18,17 @@ def main():
         "Trip Type Analysis": vis.plot_trip_type_analysis,
         "Top Zones by Trip Type": vis.plot_top_zones_trip_type,
         "Factors affecting Trip Type": vis.plot_trip_type_factors,
-        "Passenger Analysis": vis.plot_passenger_analysis
+        "Passenger Analysis": vis.plot_passenger_analysis,
+        "NYC_Hailing_Counts_Heatmap": vis.NYC_Heatmap_hailing_counts,
+        # "Regional Analysis": vis.region_analysis(df_merge_geo, proj),
+        # "Interactive Regional Analysis": plotly_region_interactgraph(df_merge_geo, target='Fare')
     }
+
 
     choice = st.selectbox("Choose a Visualization:", list(options.keys()))
 
     if st.button("Show Visualization"):
-        options[choice](data_path)
+        options[choice]()  # (filter_con)
 
 if __name__ == "__main__":
     main()

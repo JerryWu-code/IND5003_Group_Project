@@ -1,18 +1,29 @@
 import streamlit as st
 import pandas as pd
+import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 import re
 import os
 import pyarrow.parquet as pq
+import geopandas as gpd
+import geoplot as gplt
+import geoplot.crs as gcrs
+import folium
+from folium.plugins import HeatMap
+from my_scripts import Data_loader
 
 
 class Visualization:
-    def __init__(self):
-        pass
+    def __init__(self, data_path, if_st=True):
+        da = Data_loader
+        self.if_st = if_st
+        self.data = pq.read_table(data_path).to_pandas()
+        # self.df_merge_geo_zip, self.df_merge_geo_borough, self.proj = da.load_merged_geodata(self.data)
 
-    def plot_top_zones(self, data_path):
-        data = pq.read_table(data_path).to_pandas()
+    def plot_top_zones(self, filter_con=None):
+        data = self.data
+        data['trip_type'] = data['distance'].apply(lambda x: 'short' if x <= 10 else 'long')
 
         # Top 10 pickup zones
         top_pickup_zones = data['PU_Zone'].value_counts().head(10)
@@ -20,25 +31,26 @@ class Visualization:
         # Top 10 dropoff zones
         top_dropoff_zones = data['DO_Zone'].value_counts().head(10)
 
-        plt.figure(figsize=(14, 6))
+        fig, axes = plt.subplots(1, 2, figsize=(12, 6))
 
-        # Plotting the top pickup zones
-        plt.subplot(1, 2, 1)
-        sns.barplot(x=top_pickup_zones.values, y=top_pickup_zones.index, palette="viridis")
-        plt.title('Top 10 Pickup Zones')
-        plt.xlabel('Number of Pickups')
+        # 绘制顶部上车区域的条形图
+        sns.barplot(x=top_pickup_zones.values, y=top_pickup_zones.index, palette="viridis", ax=axes[0])
+        axes[0].set_title('Top 10 Pickup Zones')
+        axes[0].set_xlabel('Number of Pickups')
 
-        # Plotting the top dropoff zones
-        plt.subplot(1, 2, 2)
-        sns.barplot(x=top_dropoff_zones.values, y=top_dropoff_zones.index, palette="viridis")
-        plt.title('Top 10 Dropoff Zones')
-        plt.xlabel('Number of Dropoffs')
+        # 绘制顶部下车区域的条形图
+        sns.barplot(x=top_dropoff_zones.values, y=top_dropoff_zones.index, palette="viridis", ax=axes[1])
+        axes[1].set_title('Top 10 Dropoff Zones')
+        axes[1].set_xlabel('Number of Dropoffs')
 
         plt.tight_layout()
-        plt.show()
+        if self.if_st:
+            st.pyplot(fig)
+        else:
+            plt.show()
 
-    def plot_pickups_by_hour(self, data_path):
-        data = pq.read_table(data_path).to_pandas()
+    def plot_pickups_by_hour(self, filter_con=None):
+        data = self.data
 
         # Convert 'lpep_pickup_datetime' to datetime format
         data['PU_time'] = pd.to_datetime(data['PU_time'])
@@ -47,17 +59,21 @@ class Visualization:
         data['pickup_hour'] = data['PU_time'].dt.hour
 
         # Plot the number of pickups for each hour of the day
-        plt.figure(figsize=(12, 6))
+        fig = plt.figure(figsize=(12, 6))
         sns.countplot(data=data, x='pickup_hour', palette="viridis")
         plt.title('Number of Pickups for Each Hour of the Day')
         plt.xlabel('Hour of the Day')
         plt.ylabel('Number of Pickups')
         plt.grid(axis='y', linestyle='--', alpha=0.7)
         plt.tight_layout()
-        plt.show()
 
-    def plot_order_fare_by_hour(self, data_path):
-        data = pq.read_table(data_path).to_pandas()
+        if self.if_st:
+            st.pyplot(fig)
+        else:
+            plt.show()
+
+    def plot_order_fare_by_hour(self, filter_con=None):
+        data = self.data
 
         # Convert 'lpep_pickup_datetime' to datetime format if not done before
         if data['PU_time'].dtype != 'datetime64[ns]':
@@ -91,10 +107,13 @@ class Visualization:
 
         ax1.legend(handles=[line1, line2], loc="upper left")
 
-        plt.show()
+        if self.if_st:
+            st.pyplot(fig)
+        else:
+            plt.show()
 
-    def plot_order_fare_by_weekday(self, data_path):
-        data = pq.read_table(data_path).to_pandas()
+    def plot_order_fare_by_weekday(self, filter_con=None):
+        data = self.data
 
         data['weekday'] = pd.to_datetime(data['DATE']).dt.dayofweek
 
@@ -125,10 +144,15 @@ class Visualization:
         ax1.legend(loc="upper left")
         ax2.legend(loc="upper right")
 
-        plt.show()
+        if self.if_st:
+            st.pyplot(fig)
+        else:
+            plt.show()
 
-    def plot_24hr_analysis(self, data_path):
-        data = pq.read_table(data_path).to_pandas()
+    def plot_24hr_analysis(self, filter_con=None):
+        data = self.data
+        data['PU_time'] = pd.to_datetime(data['PU_time'])
+        data['pickup_hour'] = data['PU_time'].dt.hour
 
         if 'weekday' not in data.columns:
             data['weekday'] = pd.to_datetime(data['DATE']).dt.dayofweek
@@ -166,10 +190,14 @@ class Visualization:
 
         plt.tight_layout()
         plt.subplots_adjust(top=0.9)
-        plt.show()
 
-    def plot_rain_analysis(self, data_path):
-        data = pq.read_table(data_path).to_pandas()
+        if self.if_st:
+            st.pyplot(fig)
+        else:
+            plt.show()
+
+    def plot_rain_analysis(self, filter_con=None):
+        data = self.data
 
         # Grouping data again to include 'total_amount'
         daily_data = data.groupby('DATE').agg({
@@ -207,10 +235,13 @@ class Visualization:
         ax[2].set_ylabel('Average Fare Amount ($)')
 
         plt.tight_layout()
-        plt.show()
+        if self.if_st:
+            st.pyplot(fig)
+        else:
+            plt.show()
 
-    def plot_trip_type_analysis(self, data_path):
-        data = pq.read_table(data_path).to_pandas()
+    def plot_trip_type_analysis(self, filter_con=None):
+        data = self.data
 
         # Classify each order as short or long based on the distance threshold
         data['trip_type'] = data['distance'].apply(lambda x: 'short' if x <= 10 else 'long')
@@ -266,10 +297,13 @@ class Visualization:
         ax2.legend()
 
         plt.tight_layout()
-        plt.show()
+        if self.if_st:
+            st.pyplot(fig)
+        else:
+            plt.show()
 
-    def plot_top_zones_trip_type(self, data_path):
-        data = pq.read_table(data_path).to_pandas()
+    def plot_top_zones_trip_type(self, filter_con=None):
+        data = self.data
         # Group by PU_Zone and calculate the counts for short and long trips
         pu_counts = data.groupby(['PU_Zone', 'trip_type']).size().unstack(fill_value=0).reset_index()
         pu_counts.columns.name = None  # Remove the column index name
@@ -305,10 +339,15 @@ class Visualization:
         ax2.invert_yaxis()  # Invert y-axis for better visualization
 
         plt.tight_layout()
-        plt.show()
+        if self.if_st:
+            st.pyplot(fig)
+        else:
+            plt.show()
 
-    def plot_trip_type_factors(self, data_path):
-        data = pq.read_table(data_path).to_pandas()
+    def plot_trip_type_factors(self, filter_con=None):
+        data = self.data
+        data['trip_type'] = data['distance'].apply(lambda x: 'short' if x <= 10 else 'long')
+
         passenger_counts = data.groupby(['passenger_count', 'trip_type']).size().unstack(fill_value=0).reset_index()
         passenger_counts.columns.name = None  # Remove the column index name
 
@@ -399,10 +438,13 @@ class Visualization:
 
         plt.tight_layout()
 
-        plt.show()
+        if self.if_st:
+            st.pyplot(fig)
+        else:
+            plt.show()
 
-    def plot_passenger_analysis(self, data_path):
-        data = pq.read_table(data_path).to_pandas()
+    def plot_passenger_analysis(self, filter_con=None):
+        data = self.data
 
         grouped_passenger_data = data.groupby('passenger_count').agg({
             'total_amount': 'mean',
@@ -430,4 +472,75 @@ class Visualization:
         ax1.legend(loc="upper left")
         ax2.legend(loc="upper right")
 
-        plt.show()
+        if self.if_st:
+            st.pyplot(fig)
+        else:
+            plt.show()
+
+    def NYC_Heatmap_hailing_counts(self, filter_con=None):
+        data = self.data
+        NYC_center = [40.7127753, -74.0059728]
+        san_map = folium.Map(location=NYC_center, zoom_start=12)
+        heatdata = data['PU_LatLong']
+        HeatMap(heatdata).add_to(san_map)
+        if self.if_st:
+            st.write(san_map)
+        else:
+            return san_map
+
+    def region_analysis(self, df_merge_geo, proj, filter_con=None):
+        def plot_state_to_ax(column, ax, df_draw_avg):
+            gplt.choropleth(df_draw_avg.loc[:, [column, 'geometry']],
+                            hue=column,
+                            cmap='viridis',  # rainbow
+                            linewidth=1.0,
+                            ax=ax)
+            gplt.polyplot(nyc_boroughs, edgecolor='black', linewidth=1, ax=ax)
+
+        region_column = [i for i in list(df_merge_geo.columns) if i.startswith("PU")][0]
+        df_draw_avg = df_merge_geo.set_index(region_column).loc[:, ["Frequency", 'Fare', 'geometry']]
+
+        fig, axes = plt.subplots(1, 2, figsize=(12, 6), subplot_kw={'projection': proj})
+        plt.suptitle('Green Taxi by {}, NYC'.format(region_column.split('_')[1]), fontsize=16)
+
+        plot_state_to_ax('Frequency', axes[0], df_draw_avg)
+        axes[0].set_title('Regional Frequency in NYC')
+
+        plot_state_to_ax('Fare', axes[1], df_draw_avg)
+        axes[1].set_title('Regional Fare in NYC')
+
+        if self.if_st:
+            # st.write(san_map)
+            st.pyplot(fig)
+        else:
+            plt.show()
+
+    def plotly_region_interactgraph(self, df_merge_geo, target='Fare', filter_con=None):  # or set "Frequency"
+        region_column = [i for i in list(df_merge_geo.columns) if i.startswith("PU")][0]
+        df_draw_avg = df_merge_geo.set_index(region_column).loc[:, ["Frequency", 'Fare', 'geometry']]
+
+        color_scale = px.colors.sequential.Rainbow
+        # Good: "Rainbow", "Plasma", Ugly:"Viridis", "Cividis" (Jerry thinks so lolll~)
+
+        fig = px.choropleth_mapbox(df_draw_avg,
+                                   geojson=df_draw_avg.geometry,
+                                   locations=df_draw_avg.index,
+                                   color=target,
+                                   color_continuous_scale=color_scale,
+                                   range_color=(df_draw_avg[target].min(), df_draw_avg[target].max()),
+                                   center={"lat": 40.7128, "lon": -74.0059},
+                                   mapbox_style="carto-darkmatter",  # carto-darkmatter, open-street-map
+                                   zoom=8.8)
+        fig.update_layout(title_text='{0}-Region {1} Distribution'.format(
+            region_column.split('_')[1], target), title_x=0.5)
+
+        if self.if_st:
+            st.plotly_chart(fig)
+        else:
+            fig.show()
+
+
+if __name__ == "__main__":
+    data_path = '../data/green_sum_final.parquet'
+    vis = Visualization(data_path=data_path, if_st=False)
+    vis.plot_24hr_analysis(data_path)

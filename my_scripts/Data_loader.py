@@ -7,15 +7,19 @@ import os
 import tqdm
 import requests
 import pyarrow.parquet as pq
+import geopandas as gpd
+import geoplot as gplt
+import geoplot.crs as gcrs
 
 
 class Data_loader:
     def __init__(self):
         self.raw_dir = 'data/green_raw/'
         self.output_dir = 'data/green_sum.parquet'
+        self.nyc_shapefile_dir = 'data/NYC_Shapefile/NYC.shp'
         self.api_key = None
 
-    def raw_data_agg(self, time_range=False):
+    def raw_data_agg(self, time_range=None):
         """
         Attention!!
         Whole data we've collected ranging from "2019-01_2023-07", you can't select data out of this range!!!
@@ -44,6 +48,8 @@ class Data_loader:
 
         if not time_range:
             result.to_parquet(self.output_dir, index=False)
+            print("Extract the data ranging from 2019-01-01 to 2023-07-31. \nOutput to this path: {0}".format(
+                self.output_dir))
         else:
             start = time_range.split("_")[0]
             end = time_range.split("_")[1]
@@ -52,8 +58,8 @@ class Data_loader:
                             (end >= result['lpep_pickup_datetime'])].reset_index(drop=True)
             result.to_parquet(self.output_dir, index=False)
 
-        print("Extract the data ranging from {0} to {1}. \nOutput to this path: {2}".format(
-            start, end, self.output_dir))
+            print("Extract the data ranging from {0} to {1}. \nOutput to this path: {2}".format(
+                start, end, self.output_dir))
 
         return self.output_dir, result
 
@@ -91,15 +97,49 @@ class Data_loader:
                             if 'postal_code' in item['types']), None)
         return postal_code
 
+    def load_merged_geodata(self, df_new):
+        df_new_borough = df_new[-(df_new['PU_Borough'] == 'EWR')].reset_index(drop=True).copy()
+        nyc_boroughs = gpd.read_file(gplt.datasets.get_path('nyc_boroughs'))
+        proj = gcrs.AlbersEqualArea(central_latitude=40.7128, central_longitude=-74.0059)
+        zipcode_gdf = gpd.read_file(self.nyc_shapefile_dir)
+
+        # group borough data
+        df_group_area_zip = df_new_borough.groupby(by='PU_Zcode')[[
+            'PU_Day_Count', 'PU_Day_Avg_Fare'
+        ]].mean().reset_index()
+        df_group_area_zip = df_group_area_zip.rename(columns={
+            'PU_Day_Count': 'Frequency',
+            'PU_Day_Avg_Fare': 'Fare'
+        })
+        df_merge_geo_zip = pd.merge(df_group_area_zip,
+                                    zipcode_gdf,
+                                    left_on='PU_Zcode',
+                                    right_on='ZCTA5CE20',
+                                    how='left').dropna(axis=0)
+
+        # group zipcode data
+        df_group_area_borough = df_new_borough.groupby(by='PU_Borough')[[
+            'PU_Day_Count', 'PU_Day_Avg_Fare'
+        ]].mean().reset_index()
+        df_group_area_borough = df_group_area_borough.rename(columns={
+            'PU_Day_Count': 'Frequency',
+            'PU_Day_Avg_Fare': 'Fare'
+        })
+        df_merge_geo_borough = pd.merge(df_group_area_borough,
+                                        nyc_boroughs,
+                                        left_on='PU_Borough',
+                                        right_on='BoroName',
+                                        how='left')
+
+        # tranform them into GeoDataFrame
+        df_merge_geo_zip = gpd.GeoDataFrame(df_merge_geo_zip, geometry='geometry')
+        df_merge_geo_borough = gpd.GeoDataFrame(df_merge_geo_borough, geometry='geometry')
+
+        return df_merge_geo_zip, df_merge_geo_borough, proj
+
 
 if __name__ == "__main__":
     # Aggregate raw data to a time-ranged file
     data_loader = Data_loader()
     time_range = "2022-01-01_2023-07-31"
     new_file_dir = data_loader.raw_data_agg(time_range)
-
-    # Preprocessing
-
-    # Visualization
-
-    # Prediction
