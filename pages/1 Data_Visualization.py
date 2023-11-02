@@ -6,20 +6,24 @@ raw_dir = 'data/green_raw/'
 output_dir = 'data/green.parquet'
 nyc_shapefile_dir = 'data/NYC_Shapefile/NYC.shp'
 
-# Initialize a data_loader
-data_loader = Data_loader.Data_loader(raw_dir=raw_dir, output_dir=output_dir,
-                                      nyc_shapefile_dir=nyc_shapefile_dir)
-# Set time range
-time_range = "2022-01-01_2023-07-31"
 
-# Get the data
-df = data_loader.get_final_processed_df(time_range=time_range, export_final=False)
-vis = Visualization.Visualization(data=df, if_st=True)
+# @st.cache(allow_output_mutation=True)  # buffer the output
+@st.cache_data  # buffer the output
+def load_data(time_range):
+    data_loader = Data_loader.Data_loader(raw_dir=raw_dir, output_dir=output_dir,
+                                          nyc_shapefile_dir=nyc_shapefile_dir)
+    df = data_loader.get_final_processed_df(time_range=time_range, export_final=False)
+    return df
+
 
 def main():
-    st.title("Data Visualization App")
+    st.title("Data Visualization")
 
-    # 下拉菜单的选项和相应的函数映射
+    time_range = "2022-01-01_2023-07-31"
+    # Load data with caching
+    df = load_data(time_range)
+    vis = Visualization.Visualization(data=df, if_st=True)
+
     options = {
         "Top Zones": vis.plot_top_zones,
         "Pickups by Hour": vis.plot_pickups_by_hour,
@@ -32,15 +36,20 @@ def main():
         "Factors affecting Trip Type": vis.plot_trip_type_factors,
         "Passenger Analysis": vis.plot_passenger_analysis,
         "NYC_Hailing_Counts_Heatmap": vis.NYC_Heatmap_hailing_counts,
-        "Regional Analysis": vis.region_analysis(df_merge_geo, proj),
-        "Interactive Regional Analysis": plotly_region_interactgraph(df_merge_geo, target='Fare')
+        "Regional Analysis": vis.region_analysis,
+        "Interactive Regional Analysis": vis.plotly_region_interactgraph
     }
-
 
     choice = st.selectbox("Choose a Visualization:", list(options.keys()))
 
     if st.button("Show Visualization"):
-        options[choice]()  # (filter_con)
+        if choice == "Regional Analysis":
+            options[choice](area_range='zip')  # (filter_con)
+        elif choice == "Interactive Regional Analysis":
+            options[choice](area_range='zip', target='Fare')  # (filter_con)
+        else:
+            options[choice]()
+
 
 if __name__ == "__main__":
     main()

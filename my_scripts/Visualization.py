@@ -11,13 +11,16 @@ import geoplot as gplt
 import geoplot.crs as gcrs
 import folium
 from folium.plugins import HeatMap
+import plotly.express as px
 from my_scripts import Data_loader
+from streamlit_folium import st_folium
 
 
 class Visualization:
     def __init__(self, data, if_st=True):
         self.data = data
         self.if_st = if_st
+        data_loader = Data_loader.Data_loader()
         self.df_merge_geo_zip, self.df_merge_geo_borough, self.proj, self.nyc_boroughs = data_loader.load_merged_geodata(
             data)
 
@@ -484,7 +487,11 @@ class Visualization:
         heatdata = data['PU_LatLong']
         HeatMap(heatdata).add_to(san_map)
         if self.if_st:
-            st.write(san_map)
+            st_folium(san_map, width=700, height=500)
+            try:
+                NYC_Heatmap_hailing_counts(vis)  # 假设vis是Visualization类的实例
+            except Exception as e:
+                st.error(f"地图渲染时发生错误: {e}")
         else:
             return san_map
 
@@ -566,5 +573,5 @@ if __name__ == "__main__":
     df = data_loader.get_final_processed_df(time_range=time_range, export_final=False)
 
     vis = Visualization(data=df, if_st=False)
-    # vis.region_analysis(area_range='borough')  # or 'zip'
+    vis.region_analysis(area_range='borough')  # or 'zip'
     vis.plotly_region_interactgraph(area_range='borough', target='Fare', filter_con=None)
