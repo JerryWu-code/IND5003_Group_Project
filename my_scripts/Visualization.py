@@ -1,10 +1,7 @@
 import streamlit as st
 import pandas as pd
-import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
-import re
-import os
 import pyarrow.parquet as pq
 import geopandas as gpd
 import geoplot as gplt
@@ -12,17 +9,18 @@ import geoplot.crs as gcrs
 import folium
 from folium.plugins import HeatMap
 import plotly.express as px
-from my_scripts import Data_loader
-from streamlit_folium import st_folium
+from my_scripts.Data_loader import Data_loader
 
 
-class Visualization:
-    def __init__(self, data, if_st=True):
+class Visualization(Data_loader):
+    def __init__(self, raw_dir, output_dir, nyc_shapefile_dir, data, if_st=True):
+        Data_loader.__init__(self, raw_dir, output_dir, nyc_shapefile_dir)
+        # noinspection PyCompatibility
+        super().__init__(raw_dir, output_dir, nyc_shapefile_dir)
         self.data = data
         self.if_st = if_st
-        data_loader = Data_loader.Data_loader()
-        self.df_merge_geo_zip, self.df_merge_geo_borough, self.proj, self.nyc_boroughs = data_loader.load_merged_geodata(
-            data)
+        self.df_merge_geo_zip, self.df_merge_geo_borough, self.proj, self.nyc_boroughs = self.load_merged_geodata(
+            self.data)
 
     def plot_top_zones(self, filter_con=None):
         data = self.data
@@ -307,6 +305,9 @@ class Visualization:
 
     def plot_top_zones_trip_type(self, filter_con=None):
         data = self.data
+        data['trip_type'] = data['distance'].apply(lambda x: 'short' if x <= 10 else 'long')
+        data['PU_time'] = data['PU_time'].astype(str)
+
         # Group by PU_Zone and calculate the counts for short and long trips
         pu_counts = data.groupby(['PU_Zone', 'trip_type']).size().unstack(fill_value=0).reset_index()
         pu_counts.columns.name = None  # Remove the column index name
@@ -487,11 +488,12 @@ class Visualization:
         heatdata = data['PU_LatLong']
         HeatMap(heatdata).add_to(san_map)
         if self.if_st:
+            folium_static(san_map)
             st_folium(san_map, width=700, height=500)
             try:
-                NYC_Heatmap_hailing_counts(vis)  # 假设vis是Visualization类的实例
+                NYC_Heatmap_hailing_counts(vis)
             except Exception as e:
-                st.error(f"地图渲染时发生错误: {e}")
+                st.error(f"Error: {e}")
         else:
             return san_map
 
@@ -564,14 +566,15 @@ if __name__ == "__main__":
     nyc_shapefile_dir = '../data/NYC_Shapefile/NYC.shp'
 
     # Initialize a data_loader
-    data_loader = Data_loader.Data_loader(raw_dir=raw_dir, output_dir=output_dir,
-                                          nyc_shapefile_dir=nyc_shapefile_dir)
+    data_loader = Data_loader(raw_dir=raw_dir, output_dir=output_dir,
+                              nyc_shapefile_dir=nyc_shapefile_dir)
     # Set time range
-    time_range = "2022-01-01_2023-07-31"
+    time_range = "2022-08-01_2023-07-31"
 
     # Get the data
     df = data_loader.get_final_processed_df(time_range=time_range, export_final=False)
 
-    vis = Visualization(data=df, if_st=False)
-    vis.region_analysis(area_range='borough')  # or 'zip'
+    vis = Visualization(raw_dir, output_dir, nyc_shapefile_dir, data=df, if_st=False)
+    # vis.region_analysis(area_range='borough')  # or 'zip'
     vis.plotly_region_interactgraph(area_range='borough', target='Fare', filter_con=None)
+    # vis.NYC_Heatmap_hailing_counts()

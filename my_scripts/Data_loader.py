@@ -1,8 +1,5 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import re
 import os
 import tqdm
 import requests
@@ -14,10 +11,11 @@ import numpy as np
 
 
 class Data_loader:
-    def __init__(self,
-                 raw_dir='data/green_raw/',
-                 output_dir='data/green_sum.parquet',
-                 nyc_shapefile_dir='data/NYC_Shapefile/NYC.shp'):
+    def __init__(self, raw_dir, output_dir, nyc_shapefile_dir):
+
+        # rela_path = '{0}data/'.format(self.raw_dir.split('data/')[0])
+        # path1 = rela_path + 'Location/Area_LatLong_Zipcode.csv'
+
         self.raw_dir = raw_dir
         self.output_dir = output_dir
         self.nyc_shapefile_dir = nyc_shapefile_dir
@@ -114,6 +112,7 @@ class Data_loader:
         df_new_borough = df_new[-(df_new['PU_Borough'] == 'EWR')].reset_index(drop=True).copy()
         nyc_boroughs = gpd.read_file(gplt.datasets.get_path('nyc_boroughs'))
         proj = gcrs.AlbersEqualArea(central_latitude=40.7128, central_longitude=-74.0059)
+
         zipcode_gdf = gpd.read_file(self.nyc_shapefile_dir)
 
         # group borough data
@@ -238,4 +237,3 @@ if __name__ == "__main__":
     df = data_loader.get_final_processed_df(time_range=time_range, export_final=False)
 
     df_merge_geo_zip, df_merge_geo_borough, proj, _ = data_loader.load_merged_geodata(df)
-    print(df_merge_geo_borough)

@@ -22,7 +22,7 @@ def main():
     time_range = "2022-01-01_2023-07-31"
     # Load data with caching
     df = load_data(time_range)
-    vis = Visualization.Visualization(data=df, if_st=True)
+    vis = Visualization.Visualization(raw_dir, output_dir, nyc_shapefile_dir, data=df, if_st=True)
 
     options = {
         "Top Zones": vis.plot_top_zones,
@@ -35,7 +35,6 @@ def main():
         "Top Zones by Trip Type": vis.plot_top_zones_trip_type,
         "Factors affecting Trip Type": vis.plot_trip_type_factors,
         "Passenger Analysis": vis.plot_passenger_analysis,
-        "NYC_Hailing_Counts_Heatmap": vis.NYC_Heatmap_hailing_counts,
         "Regional Analysis": vis.region_analysis,
         "Interactive Regional Analysis": vis.plotly_region_interactgraph
     }
