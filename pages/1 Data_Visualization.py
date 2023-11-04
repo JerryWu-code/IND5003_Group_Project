@@ -1,6 +1,6 @@
 from my_scripts import Visualization, Data_loader
 import streamlit as st
-from datetime import datetime
+import datetime
 
 # Set path
 raw_dir = 'data/green_raw/'
@@ -19,9 +19,23 @@ def load_data(time_range):
 
 def main():
     st.title("Data Visualization")
- 
+    
+    # Define the minimum and maximum dates available for selection
+    min_date = datetime.date(2022, 1, 1)
+    max_date = datetime.date(2023, 7, 31)
+    
+    # Create a slider for the user to select a date range
+    start_date, end_date = st.slider(
+        "Select the date range for the data:",
+        min_value=min_date,
+        max_value=max_date,
+        value=(min_date, max_date)  # Default range
+    )
 
-    time_range = "2022-01-01_2023-07-31"
+    # Convert selected dates to the required string format
+    time_range = f"{start_date.strftime('%Y-%m-%d')}_{end_date.strftime('%Y-%m-%d')}"
+ 
+    #time_range = "2022-01-01_2023-07-31"
     # Load data with caching
     df = load_data(time_range)
     vis = Visualization.Visualization(raw_dir, output_dir, nyc_shapefile_dir, data=df, if_st=True)
