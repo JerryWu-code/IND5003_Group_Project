@@ -34,7 +34,7 @@ cd IND5003_Group_Project
 conda create -n env5003 python=3.11 -y
 conda activate env5003
 pip install --upgrade pip
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
 
 ### Run the Main.py
