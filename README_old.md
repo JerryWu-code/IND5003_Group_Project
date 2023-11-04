@@ -6,46 +6,11 @@ This is the IND5003 Group Project Repo. And this is the members' table of our te
 | --------- | -------------- | ----------- | --------- | ---------- |
 | WU QILONG | XIANG XIAONENG | DONG XINYUE | QI SHUOLI | JIN YIXUAN |
 
-We currently use the free server so that we only provide part of funtions in the website demo due to limited server performance, and if you want to explore the whole features, you could clone this repo and deploy this locally. Here are the guidance for installation and the descriptions for **dataset** and **[demo](https://ind5003groupproject-pg04-greentaxi-nyc.streamlit.app/)**:
+Here are the descriptions for **dataset** and **demo**:
 
 
 
-# Installation
 
-### Clone this Repository
-
-Enter the target directory you want to use, and use this command to clone and enter the folder:
-
-```bash
-git clone https://github.com/wu953855668/IND5003_Group_Project.git
-cd IND5003_Group_Project
-```
-
-or this:
-
-```bash
-git clone git@github.com:wu953855668/IND5003_Group_Project.git
-cd IND5003_Group_Project
-```
-
-### Create virtual Environment
-
-```bash
-conda create -n env5003 python=3.11 -y
-conda activate env5003
-pip install --upgrade pip
-pip install -r requirement.txt
-```
-
-### Run the Main.py
-
-```bash
-streamlit run Main.py
-```
-
-
-
-# Descriptions
 
 ## 1.Dataset
 
@@ -83,9 +48,9 @@ streamlit run Main.py
 
 
 
-## 2.[Demo](https://ind5003groupproject-pg04-greentaxi-nyc.streamlit.app/)
+## 2.Demo
 
-### Feature1: Multifactors Exploring Data Visualization
+### Feature1: DashBoard
 
 #### (1)Analysis of difference between short distance and long distance：
 The difference between short and long trips is a key aspect of taxi services. "trip_distance" is the main metric that classifies a trip as short or long. The "PUtime" and "DOtime" variables are used to create time series data that provides insight into the temporal aspects of these journeys. In addition, "pick-up zones" and "pick-up zones" are used to identify popular locations associated with short and long distance trips. To better understand these differences, the analysis also considers the variables "passenger_count," "RatecodeID," and "payment_type." These aspects **help to assess potential differences in passenger behaviour, preferred rate codes and payment methods between short and long haul trips**.
@@ -103,29 +68,7 @@ The demand might be related to the timely, daily, weekly, and monthly basis, so 
 
 
 
-### Feature2: Geo-Visualization
-
-#### (1)Regional Counts
-
-##### a.Borough Area
-
-
-
-##### b.Zipcode Area
-
-
-
-#### (2)Regional Price
-
-##### a.Borough Area
-
-
-
-##### b.Zipcode Area
-
-
-
-### Feature3: Time Series Analysis
+### Feature2: Prediction--Regional Counts/Price
 
 #### (1)Regional PU Boarding Frequency by Time & Predictions
 
@@ -137,7 +80,10 @@ Using our dataset, we can develop predictive models to forecast the average taxi
 
 
 
-#### Feature4: Regression Analysis
+### Feature3: Vehicle Scheduling
 
+Vehicle scheduling involves the strategic allocation of vehicles based on a combination of factors,  primarily focusing on density and proximity. These two critical factors contribute to the computation of a score that  guides the dispatch of vehicles to various regions.
 
+Density, as a key determinant, highlights the concentration of service demand in specific areas. The higher the density of the drop-off location, That means the more traffic there is in this area, the more traffic can be diverted. Simultaneously, proximity considers the geographical closeness of these areas to the available vehicle fleet.
 
+By assessing both density and proximity, a score is generated for each area, allowing for the prioritization of vehicle dispatch. Areas with high scores—indicating a combination of high service demand and proximity to the vehicle pool—are given precedence in scheduling. **This approach optimizes the utilization  of resources and enhances the efficiency of transportation services, ensuring that vehicles are dispatched to areas where they are most needed**. Consequently, vehicle scheduling based on density and proximity plays a pivotal role in meeting customer demands effectively and  improving the overall performance of the transportation system.
