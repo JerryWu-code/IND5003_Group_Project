@@ -33,9 +33,9 @@ def main():
     )
 
     # Convert selected dates to the required string format
-    time_range = f"{start_date.strftime('%Y-%m-%d')}_{end_date.strftime('%Y-%m-%d')}"
+    time_range = "{0}_{1}".format(start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
  
-    #time_range = "2022-01-01_2023-07-31"
+    # time_range = "2022-01-01_2023-07-31"
     # Load data with caching
     if st.button('Load Data'):
         df = load_data(time_range)
