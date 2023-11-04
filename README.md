@@ -50,6 +50,7 @@ And you should follow this folder structure (in `folder_structure.txt`):
 │   └── ts.py
 ├── others
 │   └── Script_1.docx
+│   └── README_old.md
 ├── pages
 │   ├── 1 Data_Visualization.py
 │   └── page2.py
