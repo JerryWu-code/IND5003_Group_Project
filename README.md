@@ -67,6 +67,8 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+
+
 ### Run the Main.py
 
 ```bash
@@ -89,6 +91,8 @@ streamlit run Main.py
 
 
 
+
+
 ### Part2: Daily weather data in New York City
 
 - We Collected comprehensive daily weather data for New York City dating from **Jan 2022** to **Jul 2023** from this [website](https://www.ncei.noaa.gov/access/search/index).
@@ -101,6 +105,8 @@ streamlit run Main.py
 | **Atmospheric Sea Level Pressure** | **ASLP** | This measures the atmospheric pressure at sea level, offering insights into weather conditions and patterns. |
 |      **Wet Bulb Temperature**      | **AWBT** | Indicates the temperature a parcel of air would have if cooled to saturation by the evaporation of water into it. |
 |       **Average Wind Speed**       | **AWND** | Provides the average speed of the wind, which can impact mobility patterns within the city. |
+
+
 
 
 
@@ -161,6 +167,8 @@ The demand might be related to the timely, daily, weekly, and monthly basis, so 
 
 Utilizing the dataset, predictive models can be created, such as SVM, XgBoost, RandomForest. These models can forecast future pick-up frequencies within certain time periods and certain areas, **aiding companies in deploying taxis strategically**. Real-time predictions allow companies to dynamically adjust their fleet, ensuring taxis are where they are needed most and maximizing the profit. The precision of the prediction is analyzed after the prediction to ensure the preciseness.
 
+
+
 #### (2)Regional PU Boarding Taxi Prices by Time & Predictions
 
 Using our dataset, we can develop predictive models to forecast the average taxi fare for pickups in different regions over time. This can be achieved using regression models, neural networks, or time series forecasting methods. By predicting taxi fare trends, service providers can **develop dynamic pricing strategies**, **offering discounts during low-demand periods and surge pricing during high-demand times**. These strategies can increase revenue and ensure that the taxi fleet is effectively utilized. Moreover, by providing fare predictions to customers in advance, taxi services can enhance transparency and improve customer trust.
@@ -168,6 +176,5 @@ Using our dataset, we can develop predictive models to forecast the average taxi
 
 
 #### Feature4: Regression Analysis
-
 
 
