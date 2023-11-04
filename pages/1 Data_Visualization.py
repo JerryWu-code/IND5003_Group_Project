@@ -19,6 +19,10 @@ def load_data(time_range):
 
 def main():
     st.title("Data Visualization")
+
+    if 'loaded_data' not in st.session_state:
+        st.session_state['loaded_data'] = None
+        st.session_state['time_range'] = None
     
     # Define the minimum and maximum dates available for selection
     min_date = datetime.date(2022, 1, 1)
@@ -34,11 +38,17 @@ def main():
 
     # Convert selected dates to the required string format
     time_range = f"{start_date.strftime('%Y-%m-%d')}_{end_date.strftime('%Y-%m-%d')}"
+
+    if st.button('Load Data'):
+        st.session_state['time_range'] = time_range
+        # Load data with caching
+        st.session_state['loaded_data'] = load_data(time_range)
  
     #time_range = "2022-01-01_2023-07-31"
     # Load data with caching
-    if st.button('Load Data'):
-        df = load_data(time_range)
+    if st.session_state['loaded_data'] is not None:
+        df = st.session_state['loaded_data']
+        #df = load_data(time_range)
         vis = Visualization.Visualization(raw_dir, output_dir, nyc_shapefile_dir, data=df, if_st=True)
         options = {
             "Top Zones": vis.plot_top_zones,
