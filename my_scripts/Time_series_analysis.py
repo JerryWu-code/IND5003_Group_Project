@@ -4,7 +4,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import re
 from my_scripts import ts, Data_loader
+from statsmodels.tsa.seasonal import seasonal_decompose, STL
+from statsmodels.tsa.statespace.tools import diff
+from statsmodels.tsa.stattools import acf
+from my_scripts import ts
+from statsmodels.tsa.arima_model import ARIMA
+import pmdarima as pm
 
+borough_lst = ['Bronx', 'Brooklyn', 'Manhattan', 'Queens']
 
 class Time_series_analysis:
     def __init__(self, df, whole_time, if_st=True):
@@ -26,15 +33,6 @@ class Time_series_analysis:
 
         return df_counts, df_fare
 
-    from statsmodels.tsa.seasonal import seasonal_decompose, STL
-    from statsmodels.tsa.statespace.tools import diff
-    from statsmodels.tsa.stattools import acf
-    from my_scripts import ts
-    from statsmodels.tsa.arima_model import ARIMA
-    from statsmodels.tsa.api import ExponentialSmoothing, SimpleExpSmoothing, Holt
-    import pmdarima as pm
-
-    borough_lst = ['Bronx', 'Brooklyn', 'Manhattan', 'Queens']
 
     def data_pivot(dt):
         dt['DATE'] = pd.to_datetime(dt['DATE'])
@@ -187,14 +185,57 @@ if __name__ == '__main__':
     raw_dir = '../data/green_raw/'
     output_dir = '../data/green.parquet'
     nyc_shapefile_dir = '../data/NYC_Shapefile/NYC.shp'
-    time_range = '2023-01-01_2023-07-31'
+    # time_range = '2023-01-01_2023-07-31'
 
     # Initialize a data_loader
     data_loader = Data_loader.Data_loader(raw_dir=raw_dir, output_dir=output_dir,
                                           nyc_shapefile_dir=nyc_shapefile_dir)
     # Get the data
-    df = data_loader.get_final_processed_df(time_range=time_range, export_final=False)
+    df_new = data_loader.get_final_processed_df(time_range=time_range, export_final=False)
+
+    dt = df_new.copy()
+
+    # dt = df_new[(df_new['DATE'] >= '2023-01-01') & (df_new['DATE'] <= '2023-06-01')].reset_index(drop=True)
+    filter_con = 'Counts'
+    select = borough_lst[2]
+
+    pivot_counts, pivot_fare = data_pivot(dt)
+    item_title, temp_df = select_df(filter_con, select, pivot_counts, pivot_fare)
 
     # Set the period to analyze
     ts_ana_period = '2023-06-01_2023-07-31'
     time_ana = Time_series_analysis(whole_time=ts_ana_period, if_st=False)
+
+    # 1.Time Series Analysis
+
+    # 1)original time series
+    time_series(temp_df)
+    # 2)seasonal analysis
+    season_plot(temp_df, sample='M')
+    # 3)decompose analysis
+    seasonal_decompose_plot(temp_df, sample='M')
+
+    # 2.Prediction
+
+    dt = df_new[(df_new['DATE'] >= '2023-01-01') & (df_new['DATE'] <= '2023-06-01')].reset_index(drop=True)
+    filter_con = 'Counts'
+    select = borough_lst[2]
+
+    pivot_counts, pivot_fare = data_pivot(dt)
+    item_title, temp_df = select_df(filter_con, select, pivot_counts, pivot_fare)
+
+    # 1)snaive
+    m, sn = seasonal_naive_pred(temp_df, sample='D', regular_period=7, test_train_rate=1 / 10)
+
+    # 2)arima
+    arima_m1 = arima_pred(temp_df, m=7, test_train_rate=1 / 10)
+    print(arima_m1.summary())
+
+    arima_m1.plot_diagnostics(figsize=(12, 8));
+
+    arima_draw(temp_df)
+
+    print('rmse:')
+    print('mean', ts.rmse(test_set[select].values, m))
+    print('snaive', ts.rmse(test_set[select].values, sn))
+    print('arima', ts.rmse(test_set[select].values, arima_m1.predict(n_periods=len(test_set))))
