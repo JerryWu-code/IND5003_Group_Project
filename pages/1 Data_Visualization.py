@@ -19,20 +19,11 @@ def load_data(time_range):
 
 def main():
     st.title("Data Visualization")
-    min_date = datetime(2020, 1, 1)
-    max_date = datetime(2023, 7, 31)
-    time_range = st.slider("Select the time range:",
-                           min_value=min_date,
-                           max_value=max_date,
-                           value=(min_date, max_date),
-                           format='YYYY-MM-DD')
-    start_date, end_date = time_range
-    time_range_formatted = f"{start_date.strftime('%Y-%m-%d')}_{end_date.strftime('%Y-%m-%d')}"
-    df = load_data(time_range_formatted)
+ 
 
-    #time_range = "2022-01-01_2023-07-31"
+    time_range = "2022-01-01_2023-07-31"
     # Load data with caching
-    #df = load_data(time_range)
+    df = load_data(time_range)
     vis = Visualization.Visualization(raw_dir, output_dir, nyc_shapefile_dir, data=df, if_st=True)
 
     options = {
