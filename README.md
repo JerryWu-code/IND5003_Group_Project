@@ -36,18 +36,18 @@ And you should follow this folder structure (in `folder_structure.txt`):
 ├── LICENSE
 ├── Main.py
 ├── README.md
-├── README_old.md
-├── fold
 ├── data
 │   ├── Location
 │   ├── NYC_Shapefile
 │   ├── Weather
 │   └── green_raw
+├── folder_structure.txt
 ├── my_scripts
 │   ├── Data_loader.py
-│   ├── Prediction.py
+│   ├── Time_series_analysis.py
 │   ├── Visualization.py
-│   └── __pycache__
+│   ├── __pycache__
+│   └── ts.py
 ├── others
 │   └── Script_1.docx
 ├── pages
@@ -123,16 +123,18 @@ streamlit run Main.py
 
 ### Feature1: Multifactors Exploring Data Visualization
 
-#### (1)Analysis of difference between short distance and long distance：
+#### (1) Analysis of difference between short distance and long distance：
+
 The difference between short and long trips is a key aspect of taxi services. "trip_distance" is the main metric that classifies a trip as short or long. The "PUtime" and "DOtime" variables are used to create time series data that provides insight into the temporal aspects of these journeys. In addition, "pick-up zones" and "pick-up zones" are used to identify popular locations associated with short and long distance trips. To better understand these differences, the analysis also considers the variables "passenger_count," "RatecodeID," and "payment_type." These aspects **help to assess potential differences in passenger behaviour, preferred rate codes and payment methods between short and long haul trips**.
 
 This analysis is crucial for taxi service providers as it enables them to better understand their customers and effectively align their services with market needs. By recognizing these differences, taxi companies can **develop sound strategies**. These strategies may **include optimizing vehicle configurations, offering diversified service levels, and adjusting pricing strategies** to provide valuable insights into operational and marketing decisions, enabling the company to improve service levels and meet broader customer needs.
 
-#### (2)Which areas have the most boarding and alighting:
+#### (2) Which areas have the most boarding and alighting:
 
 Based on our analysis of the dataset, certain zones consistently show higher pickup and dropoff frequencies. Using the 'PUcount' and 'DOcount' metrics, we identified the top 3 zones for both pickups and dropoffs. The zones with the highest pickups might indicate popular residential areas or business hubs, while zones with the highest dropoffs could signify popular destinations, commercial areas, or tourist spots. Understanding these trends **helps taxi service providers optimize their fleet deployment to cater to the highest demand areas effectively**.
 
-#### (3)Peak and Off-Peak Times
+#### (3) Peak and Off-Peak Times
+
 Analyzing peak and off-peak times for taxi services is crucial for **optimizing operations, improving customer satisfaction, and maximizing profits for a taxi company**. Consequently, we need to evaluate based on peak and off-peak times for taxi services. We may need to **deploy more taxis during high demand ensure efficient service and reduce the taxi count during off-peak**. 
 
 The demand might be related to the timely, daily, weekly, and monthly basis, so we have a brief analysis of them using line charts and histograms. Additionally, the demand in different locations should be various, so we visualize the demand based on geographical information using the heated map. What's more, the weather could also be a factor in people choosing or not choosing a taxi to go out. Accordingly, we need the dataset: pickuptime, dropofftime, pickuparea, dropoffarea, and whether.
@@ -141,21 +143,17 @@ The demand might be related to the timely, daily, weekly, and monthly basis, so 
 
 ### Feature2: Geo-Visualization
 
-#### (1)Regional Counts
+#### (1) Regional Counts
 
 ##### a.Borough Area
-
-
 
 ##### b.Zipcode Area
 
 
 
-#### (2)Regional Price
+#### (2) Regional Price
 
 ##### a.Borough Area
-
-
 
 ##### b.Zipcode Area
 
@@ -163,18 +161,19 @@ The demand might be related to the timely, daily, weekly, and monthly basis, so 
 
 ### Feature3: Time Series Analysis
 
-#### (1)Regional PU Boarding Frequency by Time & Predictions
+**Borough~Average Fare & Total Counts**
 
-Utilizing the dataset, predictive models can be created, such as SVM, XgBoost, RandomForest. These models can forecast future pick-up frequencies within certain time periods and certain areas, **aiding companies in deploying taxis strategically**. Real-time predictions allow companies to dynamically adjust their fleet, ensuring taxis are where they are needed most and maximizing the profit. The precision of the prediction is analyzed after the prediction to ensure the preciseness.
+#### (1) Seasonal Time Series Analysis
 
+#### (2) Decomposing Analysis
 
+#### (3) Time Series Prediction
 
-#### (2)Regional PU Boarding Taxi Prices by Time & Predictions
+##### a.Seasonal Naive Prediction
 
-Using our dataset, we can develop predictive models to forecast the average taxi fare for pickups in different regions over time. This can be achieved using regression models, neural networks, or time series forecasting methods. By predicting taxi fare trends, service providers can **develop dynamic pricing strategies**, **offering discounts during low-demand periods and surge pricing during high-demand times**. These strategies can increase revenue and ensure that the taxi fleet is effectively utilized. Moreover, by providing fare predictions to customers in advance, taxi services can enhance transparency and improve customer trust.
+##### b.ARIMA
 
 
 
 ### Feature4: Regression Analysis
-
 

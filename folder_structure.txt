@@ -3,18 +3,18 @@
 ├── LICENSE
 ├── Main.py
 ├── README.md
-├── README_old.md
-├── README_origin.md
 ├── data
 │   ├── Location
 │   ├── NYC_Shapefile
 │   ├── Weather
 │   └── green_raw
+├── folder_structure.txt
 ├── my_scripts
 │   ├── Data_loader.py
-│   ├── Prediction.py
+│   ├── Time_series_analysis.py
 │   ├── Visualization.py
-│   └── __pycache__
+│   ├── __pycache__
+│   └── ts.py
 ├── others
 │   └── Script_1.docx
 ├── pages

@@ -23,3 +23,5 @@ seaborn==0.12.2
 streamlit==1.28.0
 tqdm==4.65.0
 streamlit_folium==0.15.0
+statsmodels==0.14.0
+pmdarima==2.0.3
