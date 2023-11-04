@@ -28,6 +28,36 @@ git clone git@github.com:wu953855668/IND5003_Group_Project.git
 cd IND5003_Group_Project
 ```
 
+And you should follow this folder structure (in `folder_structure.txt`):
+
+```
+.
+├── Group_Project.ipynb
+├── LICENSE
+├── Main.py
+├── README.md
+├── README_old.md
+├── fold
+├── data
+│   ├── Location
+│   ├── NYC_Shapefile
+│   ├── Weather
+│   └── green_raw
+├── my_scripts
+│   ├── Data_loader.py
+│   ├── Prediction.py
+│   ├── Visualization.py
+│   └── __pycache__
+├── others
+│   └── Script_1.docx
+├── pages
+│   ├── 1 Data_Visualization.py
+│   └── page2.py
+└── requirements.txt
+```
+
+
+
 ### Create virtual Environment
 
 ```bash
