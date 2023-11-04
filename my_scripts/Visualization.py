@@ -23,14 +23,12 @@ class Visualization(Data_loader):
             self.data)
 
     def plot_top_zones(self, filter_con=None):
-        data = self.data
-        data['trip_type'] = data['distance'].apply(lambda x: 'short' if x <= 10 else 'long')
 
         # Top 10 pickup zones
-        top_pickup_zones = data['PU_Zone'].value_counts().head(10)
+        top_pickup_zones = self.data['PU_Zone'].value_counts().head(10)
 
         # Top 10 dropoff zones
-        top_dropoff_zones = data['DO_Zone'].value_counts().head(10)
+        top_dropoff_zones = self.data['DO_Zone'].value_counts().head(10)
 
         fig, axes = plt.subplots(1, 2, figsize=(12, 6))
 
@@ -51,17 +49,16 @@ class Visualization(Data_loader):
             plt.show()
 
     def plot_pickups_by_hour(self, filter_con=None):
-        data = self.data
 
         # Convert 'lpep_pickup_datetime' to datetime format
-        data['PU_time'] = pd.to_datetime(data['PU_time'])
+        self.data['PU_time'] = pd.to_datetime(self.data['PU_time'])
 
         # Extract the hour from the pickup datetime
-        data['pickup_hour'] = data['PU_time'].dt.hour
+        self.data['pickup_hour'] = self.data['PU_time'].dt.hour
 
         # Plot the number of pickups for each hour of the day
         fig = plt.figure(figsize=(12, 6))
-        sns.countplot(data=data, x='pickup_hour', palette="viridis")
+        sns.countplot(data=self.data, x='pickup_hour', palette="viridis")
         plt.title('Number of Pickups for Each Hour of the Day')
         plt.xlabel('Hour of the Day')
         plt.ylabel('Number of Pickups')
@@ -74,25 +71,22 @@ class Visualization(Data_loader):
             plt.show()
 
     def plot_order_fare_by_hour(self, filter_con=None):
-        data = self.data
 
         # Convert 'lpep_pickup_datetime' to datetime format if not done before
-        if data['PU_time'].dtype != 'datetime64[ns]':
-            data['PU_time'] = pd.to_datetime(data['PU_time'])
+        if self.data['PU_time'].dtype != 'datetime64[ns]':
+            self.data['PU_time'] = pd.to_datetime(self.data['PU_time'])
 
         # Extract the hour from the pickup datetime if not done before
-        if 'pickup_hour' not in data.columns:
-            data['pickup_hour'] = data['PU_time'].dt.hour
+        if 'pickup_hour' not in self.data.columns:
+            self.data['pickup_hour'] = self.data['PU_time'].dt.hour
 
-        grouped_data = data.groupby('pickup_hour').agg({
+        grouped_data = self.data.groupby('pickup_hour').agg({
             'total_amount': 'sum',
             'DATE': 'count'
         }).reset_index()
-
         grouped_data.rename(columns={'total_amount': 'total_fare', 'DATE': 'order_count'}, inplace=True)
 
         fig, ax1 = plt.subplots(figsize=(15, 8))
-
         line1, = ax1.plot(grouped_data["pickup_hour"], grouped_data["order_count"], 'b-', label="Order Count",
                           marker="o")
         ax1.set_xlabel('Hour of the Day')
@@ -105,7 +99,6 @@ class Visualization(Data_loader):
         ax2.tick_params('y', colors='g')
 
         plt.title("Total Order Count and Total Fare for Each Hour", fontsize=16)
-
         ax1.legend(handles=[line1, line2], loc="upper left")
 
         if self.if_st:
@@ -117,7 +110,6 @@ class Visualization(Data_loader):
         data = self.data
 
         data['weekday'] = pd.to_datetime(data['DATE']).dt.dayofweek
-
         grouped_weekday_data = data.groupby('weekday').agg({
             'total_amount': 'mean',
             'DATE': 'count'
@@ -151,14 +143,10 @@ class Visualization(Data_loader):
             plt.show()
 
     def plot_24hr_analysis(self, filter_con=None):
-        data = self.data
-        data['PU_time'] = pd.to_datetime(data['PU_time'])
-        data['pickup_hour'] = data['PU_time'].dt.hour
+        data = self.data.copy()
 
         if 'weekday' not in data.columns:
             data['weekday'] = pd.to_datetime(data['DATE']).dt.dayofweek
-
-        data['day_type'] = data['weekday'].apply(lambda x: 'Weekday' if x < 5 else 'Weekend')
 
         grouped_daytype_data = data.groupby(['day_type', 'pickup_hour']).agg({
             'total_amount': 'mean',
@@ -198,10 +186,9 @@ class Visualization(Data_loader):
             plt.show()
 
     def plot_rain_analysis(self, filter_con=None):
-        data = self.data
 
         # Grouping data again to include 'total_amount'
-        daily_data = data.groupby('DATE').agg({
+        daily_data = self.data.groupby('DATE').agg({
             'distance': 'mean',
             'total_amount': 'mean',
             'DATE': 'count',
@@ -242,11 +229,7 @@ class Visualization(Data_loader):
             plt.show()
 
     def plot_trip_type_analysis(self, filter_con=None):
-        data = self.data
-
-        # Classify each order as short or long based on the distance threshold
-        data['trip_type'] = data['distance'].apply(lambda x: 'short' if x <= 10 else 'long')
-
+        data = self.data.copy()
         # Ensure PU_time column is of string type
         data['PU_time'] = data['PU_time'].astype(str)
 
@@ -304,16 +287,13 @@ class Visualization(Data_loader):
             plt.show()
 
     def plot_top_zones_trip_type(self, filter_con=None):
-        data = self.data
-        data['trip_type'] = data['distance'].apply(lambda x: 'short' if x <= 10 else 'long')
-        data['PU_time'] = data['PU_time'].astype(str)
 
         # Group by PU_Zone and calculate the counts for short and long trips
-        pu_counts = data.groupby(['PU_Zone', 'trip_type']).size().unstack(fill_value=0).reset_index()
+        pu_counts = self.data.groupby(['PU_Zone', 'trip_type']).size().unstack(fill_value=0).reset_index()
         pu_counts.columns.name = None  # Remove the column index name
         pu_counts.sort_values(by='long', ascending=False, inplace=True)
         # Group by DO_Zone and calculate the counts for short and long trips
-        do_counts = data.groupby(['DO_Zone', 'trip_type']).size().unstack(fill_value=0).reset_index()
+        do_counts = self.data.groupby(['DO_Zone', 'trip_type']).size().unstack(fill_value=0).reset_index()
         do_counts.columns.name = None  # Remove the column index name
         do_counts.sort_values(by='long', ascending=False, inplace=True)
 
@@ -349,10 +329,8 @@ class Visualization(Data_loader):
             plt.show()
 
     def plot_trip_type_factors(self, filter_con=None):
-        data = self.data
-        data['trip_type'] = data['distance'].apply(lambda x: 'short' if x <= 10 else 'long')
 
-        passenger_counts = data.groupby(['passenger_count', 'trip_type']).size().unstack(fill_value=0).reset_index()
+        passenger_counts = self.data.groupby(['passenger_count', 'trip_type']).size().unstack(fill_value=0).reset_index()
         passenger_counts.columns.name = None  # Remove the column index name
 
         # Calculate proportions for plotting
@@ -361,7 +339,7 @@ class Visualization(Data_loader):
         passenger_counts['long_proportion'] = passenger_counts['long'] / passenger_counts['total']
 
         # Group by RatecodeID and calculate the counts for short and long trips
-        ratecode_counts = data.groupby(['RatecodeID', 'trip_type']).size().unstack(fill_value=0).reset_index()
+        ratecode_counts = self.data.groupby(['RatecodeID', 'trip_type']).size().unstack(fill_value=0).reset_index()
         ratecode_counts.columns.name = None  # Remove the column index name
 
         # Calculate proportions for plotting
@@ -370,7 +348,7 @@ class Visualization(Data_loader):
         ratecode_counts['long_proportion'] = ratecode_counts['long'] / ratecode_counts['total']
 
         # Group by payment_type and calculate the counts for short and long trips
-        payment_counts = data.groupby(['payment_type', 'trip_type']).size().unstack(fill_value=0).reset_index()
+        payment_counts = self.data.groupby(['payment_type', 'trip_type']).size().unstack(fill_value=0).reset_index()
         payment_counts.columns.name = None  # Remove the column index name
 
         # Calculate proportions for plotting
@@ -448,9 +426,8 @@ class Visualization(Data_loader):
             plt.show()
 
     def plot_passenger_analysis(self, filter_con=None):
-        data = self.data
 
-        grouped_passenger_data = data.groupby('passenger_count').agg({
+        grouped_passenger_data = self.data.groupby('passenger_count').agg({
             'total_amount': 'mean',
             'DATE': 'count'
         }).reset_index()
@@ -482,10 +459,9 @@ class Visualization(Data_loader):
             plt.show()
 
     def NYC_Heatmap_hailing_counts(self, filter_con=None):
-        data = self.data
         NYC_center = [40.7127753, -74.0059728]
         san_map = folium.Map(location=NYC_center, zoom_start=12)
-        heatdata = data['PU_LatLong']
+        heatdata = self.data['PU_LatLong']
         HeatMap(heatdata).add_to(san_map)
         if self.if_st:
             folium_static(san_map)

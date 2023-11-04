@@ -206,6 +206,13 @@ class Data_loader:
         df_new["PU_LatLong"] = df_new["PU_LatLong"].apply(eval)
         df_new["DO_LatLong"] = df_new["DO_LatLong"].apply(eval)
 
+        # 5.A bit more processing for visualization
+        df_new['trip_type'] = df_new['distance'].apply(lambda x: 'short' if x <= 10 else 'long')
+        df_new['PU_time'] = pd.to_datetime(df_new['PU_time'])
+        df_new['pickup_hour'] = df_new['PU_time'].dt.hour
+        df_new['weekday'] = pd.to_datetime(df_new['DATE']).dt.dayofweek
+        df_new['day_type'] = df_new['weekday'].apply(lambda x: 'Weekday' if x < 5 else 'Weekend')
+
         # Finally we just use df_new
         if export_final:
             print(self.output_dir)
@@ -232,7 +239,7 @@ if __name__ == "__main__":
     data_loader = Data_loader(raw_dir=raw_dir, output_dir=output_dir, nyc_shapefile_dir=nyc_shapefile_dir)
 
     # Set time range
-    time_range = "2022-01-01_2023-07-31"
+    time_range = "2022-08-01_2023-07-31"
     # _, df_raw = data_loader.raw_data_agg(time_range=time_range, export_raw=True)
     df = data_loader.get_final_processed_df(time_range=time_range, export_final=False)
 
