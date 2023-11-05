@@ -221,7 +221,7 @@ class Regression(Data_loader):
         plt.title('Feature Importance')
         plt.xlabel('Importance')
         plt.ylabel('Feature')
-         if self.if_st:
+        if self.if_st:
             st.pyplot(fig)
         else:
             plt.show()
