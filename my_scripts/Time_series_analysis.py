@@ -1,25 +1,19 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
-import re
 from my_scripts import ts, Data_loader
 from statsmodels.tsa.seasonal import seasonal_decompose, STL
-from statsmodels.tsa.statespace.tools import diff
-from statsmodels.tsa.stattools import acf
-from my_scripts import ts
 from statsmodels.tsa.arima_model import ARIMA
 import pmdarima as pm
 
 borough_lst = ['Bronx', 'Brooklyn', 'Manhattan', 'Queens']
+
 
 class Time_series_analysis:
     def __init__(self, df, whole_time, if_st=True):
         self.whole_time = whole_time
         self.data = df
         self.df_counts, self_df_fare = self.load_time_series_data(whole_time)
-
-        pass
 
     def load_time_series_data(self):
         start = time_range.split("_")[0]
@@ -33,8 +27,7 @@ class Time_series_analysis:
 
         return df_counts, df_fare
 
-
-    def data_pivot(dt):
+    def data_pivot(self, dt):
         dt['DATE'] = pd.to_datetime(dt['DATE'])
 
         dt = dt[dt['PU_Borough'].isin(borough_lst)].reset_index(
@@ -178,7 +171,8 @@ class Time_series_analysis:
         plt.plot(ff, color='red', label='Forecast')
         plt.fill_between(lower_series.index, lower_series, upper_series, color='gray', alpha=.15)
         plt.plot(test_set, 'g--', label='True')
-        plt.legend();
+        plt.legend()
+        plt.show()
 
 
 if __name__ == '__main__':
@@ -231,7 +225,7 @@ if __name__ == '__main__':
     arima_m1 = arima_pred(temp_df, m=7, test_train_rate=1 / 10)
     print(arima_m1.summary())
 
-    arima_m1.plot_diagnostics(figsize=(12, 8));
+    arima_m1.plot_diagnostics(figsize=(12, 8))
 
     arima_draw(temp_df)
 

@@ -11,7 +11,7 @@ import pandas as pd
 from my_scripts.Data_loader import Data_loader
 
 class Regression(Data_loader):
-    def __init__(self, raw_dir, output_dir, nyc_shapefile_dir, data, if_st=True):
+    def __init__(self, raw_dir, output_dir, nyc_shapefile_dir, data, if_st=False):
         Data_loader.__init__(self, raw_dir, output_dir, nyc_shapefile_dir)
         # noinspection PyCompatibility
         super().__init__(raw_dir, output_dir, nyc_shapefile_dir)

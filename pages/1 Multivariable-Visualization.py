@@ -19,6 +19,7 @@ def load_data(time_range):
 
 def main():
     st.title("Data Visualization")
+    # st.image('others/Cart.png', caption='Cart')
 
     if 'loaded_data' not in st.session_state:
         st.session_state['loaded_data'] = None
