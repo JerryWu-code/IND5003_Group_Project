@@ -1,6 +1,5 @@
-from my_scripts import Visualization, Data_loader
+from my_scripts import Regression, Data_loader
 import streamlit as st
-import datetime
 
 # Set path
 raw_dir = 'data/green_raw/'
@@ -19,32 +18,8 @@ def load_data(time_range):
 
 def main():
     st.title("Data Visualization")
-
-    if 'loaded_data' not in st.session_state:
-        st.session_state['loaded_data'] = None
-        st.session_state['time_range'] = None
-
-    # Define the minimum and maximum dates available for selection
-    min_date = datetime.date(2022, 1, 1)
-    max_date = datetime.date(2023, 7, 31)
-
-    # Create a slider for the user to select a date range
-    start_date, end_date = st.slider(
-        "Select the date range for the data:",
-        min_value=min_date,
-        max_value=max_date,
-        value=(min_date, max_date)  # Default range
-    )
-
-    # Convert selected dates to the required string format
-    time_range = "{0}_{1}".format(start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
-
-    if st.button('Load Data'):
-        st.session_state['time_range'] = time_range
-        # Load data with caching
-        st.session_state['loaded_data'] = load_data(time_range)
-
-    # time_range = "2022-01-01_2023-07-31"
+    
+    time_range = "2022-01-01_2023-07-31"
     # Load data with caching
     if st.session_state['loaded_data'] is not None:
         df = st.session_state['loaded_data']
@@ -74,8 +49,7 @@ def main():
                 options[choice](area_range='zip', target='Fare')  # (filter_con)
             else:
                 options[choice]()
-    else:
-        st.write('Please select a date range and click "Load Data" to view visualizations.')
+
 
 
 if __name__ == "__main__":
