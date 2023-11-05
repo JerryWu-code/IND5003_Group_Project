@@ -26,7 +26,7 @@ def main():
         st.session_state['time_range'] = None
 
     # Define the minimum and maximum dates available for selection
-    min_date = datetime.date(2022, 1, 1)
+    min_date = datetime.date(2019, 1, 1)
     max_date = datetime.date(2023, 7, 31)
 
     # Create a slider for the user to select a date range
@@ -62,19 +62,12 @@ def main():
             "Top Zones by Trip Type": vis.plot_top_zones_trip_type,
             "Factors affecting Trip Type": vis.plot_trip_type_factors,
             "Passenger Analysis": vis.plot_passenger_analysis,
-            "Regional Analysis": vis.region_analysis,
-            "Interactive Regional Analysis": vis.plotly_region_interactgraph
         }
 
         choice = st.selectbox("Choose a Visualization:", list(options.keys()))
 
         if st.button("Show Visualization"):
-            if choice == "Regional Analysis":
-                options[choice](area_range='zip')  # (filter_con)
-            elif choice == "Interactive Regional Analysis":
-                options[choice](area_range='zip', target='Fare')  # (filter_con)
-            else:
-                options[choice]()
+            options[choice]()
     else:
         st.write('Please select a date range and click "Load Data" to view visualizations.')
 
