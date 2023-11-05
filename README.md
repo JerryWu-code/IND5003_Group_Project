@@ -41,19 +41,24 @@ And you should follow this folder structure (in `folder_structure.txt`):
 │   ├── NYC_Shapefile
 │   ├── Weather
 │   └── green_raw
+├── figs
 ├── folder_structure.txt
 ├── my_scripts
 │   ├── Data_loader.py
+│   ├── Regression.py
 │   ├── Time_series_analysis.py
 │   ├── Visualization.py
 │   ├── __pycache__
 │   └── ts.py
 ├── others
+│   ├── Cart.png
+│   ├── README_old.md
 │   └── Script_1.docx
-│   └── README_old.md
 ├── pages
-│   ├── 1 Data_Visualization.py
-│   └── page2.py
+│   ├── 1 Multivariable-Visualization.py
+│   ├── 2 Geo-Visualization.py
+│   ├── 3 Time-Series-Prediction.py
+│   └── 4 Regression Analysis.py
 └── requirements.txt
 ```
 
