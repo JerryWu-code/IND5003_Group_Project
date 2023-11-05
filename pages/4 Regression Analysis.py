@@ -19,7 +19,7 @@ def load_data(time_range):
 def main():
     st.title("Data Visualization")
     
-    time_range = "2022-01-01_2023-07-31"
+    time_range = "2022-01-01_2022-12-31"
     # Load data with caching
     df = load_data(time_range)
     vis = Visualization.Visualization(raw_dir, output_dir, nyc_shapefile_dir, data=df, if_st=True)
