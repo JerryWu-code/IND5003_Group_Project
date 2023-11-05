@@ -84,8 +84,11 @@ class Regression(Data_loader):
         plt.title('Feature Importance')
         plt.xlabel('Importance')
         plt.ylabel('Feature')
-        plt.show()
-        
+        if self.if_st:
+            st.pyplot(fig)
+        else:
+            plt.show()
+
         return model 
         
     def xgboost_regression(self, feature_columns, target_column):
@@ -153,8 +156,10 @@ class Regression(Data_loader):
         plt.title('Feature Importance')
         plt.xlabel('Importance')
         plt.ylabel('Feature')
-        plt.show()
-
+        if self.if_st:
+            st.pyplot(fig)
+        else:
+            plt.show()
         return xgboost_regressor
         
     def decision_tree_regression(self, feature_columns, target_column):
@@ -216,8 +221,11 @@ class Regression(Data_loader):
         plt.title('Feature Importance')
         plt.xlabel('Importance')
         plt.ylabel('Feature')
-        plt.show()
-
+         if self.if_st:
+            st.pyplot(fig)
+        else:
+            plt.show()
+            
         return decision_tree
 
 
