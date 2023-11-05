@@ -68,7 +68,7 @@ class Regression(Data_loader):
         })
 
         # Display the performance metrics table
-        print(performance_metrics)
+        display(performance_metrics.style.hide(axis='index').set_caption("Performance Metrics"))
 
         # Get and plot feature importances
         feature_importances = pd.DataFrame({
@@ -134,7 +134,7 @@ class Regression(Data_loader):
             'Metric': ['RMSE', 'R^2', 'MAE'],
             'Value': [xgboost_rmse, xgboost_r2, mae]
         })
-        print(xgboost_performance_metrics)
+        display(xgboost_performance_metrics.style.hide(axis='index').set_caption("Performance Metrics"))
 
         # Feature importances
         feature_importances = pd.DataFrame({
@@ -194,7 +194,7 @@ class Regression(Data_loader):
             'Metric': ['RMSE', 'R^2', 'MAE'],
             'Value': [dt_rmse, dt_r2, mae]
         })
-        print(dt_performance_metrics)
+        display(dt_performance_metrics.style.hide(axis='index').set_caption("Performance Metrics"))
 
         # Feature importances
         feature_importances = pd.DataFrame({
