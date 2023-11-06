@@ -26,7 +26,7 @@ def main():
     feature_columns = ['AVG_T', 'pickup_hour', 'passenger_count', 'distance', 'Rainfall']
     target_column = 'total_amount'
     options = {       
-        "Decision": reg.decision_tree_regression,
+        "Decision Tree": reg.decision_tree_regression,
         "XGBoost": reg.xgboost_regression,
         "Gradient Boosting": reg.GB_regression,
     }
