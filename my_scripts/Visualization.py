@@ -32,12 +32,10 @@ class Visualization(Data_loader):
 
         fig, axes = plt.subplots(1, 2, figsize=(12, 6))
 
-        # 绘制顶部上车区域的条形图
         sns.barplot(x=top_pickup_zones.values, y=top_pickup_zones.index, palette="viridis", ax=axes[0])
         axes[0].set_title('Top 10 Pickup Zones')
         axes[0].set_xlabel('Number of Pickups')
 
-        # 绘制顶部下车区域的条形图
         sns.barplot(x=top_dropoff_zones.values, y=top_dropoff_zones.index, palette="viridis", ax=axes[1])
         axes[1].set_title('Top 10 Dropoff Zones')
         axes[1].set_xlabel('Number of Dropoffs')
