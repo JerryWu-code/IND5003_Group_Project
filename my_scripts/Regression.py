@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import pandas as pd
+import streamlit as st
 from my_scripts.Data_loader import Data_loader
 
 class Regression(Data_loader):
