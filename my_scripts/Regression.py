@@ -79,8 +79,8 @@ class Regression(Data_loader):
             'Importance': model.feature_importances_
         }).sort_values('Importance', ascending=False)
         
-        plt.figure(figsize=(10, 6))
-        sns.barplot(x='Importance', y='Feature', data=feature_importances)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.barplot(x='Importance', y='Feature', data=feature_importances, ax=ax)
         plt.title('Feature Importance')
         plt.xlabel('Importance')
         plt.ylabel('Feature')
@@ -151,8 +151,8 @@ class Regression(Data_loader):
             'Importance': xgboost_regressor.feature_importances_
         }).sort_values('Importance', ascending=False)
 
-        plt.figure(figsize=(10, 6))
-        sns.barplot(x='Importance', y='Feature', data=feature_importances)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.barplot(x='Importance', y='Feature', data=feature_importances, ax=ax)
         plt.title('Feature Importance')
         plt.xlabel('Importance')
         plt.ylabel('Feature')
@@ -216,8 +216,8 @@ class Regression(Data_loader):
             'Importance': decision_tree.feature_importances_
         }).sort_values('Importance', ascending=False)
 
-        plt.figure(figsize=(10, 6))
-        sns.barplot(x='Importance', y='Feature', data=feature_importances)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.barplot(x='Importance', y='Feature', data=feature_importances, ax=ax)
         plt.title('Feature Importance')
         plt.xlabel('Importance')
         plt.ylabel('Feature')
