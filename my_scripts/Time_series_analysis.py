@@ -60,7 +60,7 @@ class Time_series_analysis(Data_loader):
 
         return item_title, temp_df
 
-    def time_series(self, temp_df):
+    def time_series(self, temp_df, select, item_title):
         fig1 = plt.figure(figsize=(10, 5))
         temp_df[select].plot(title=item_title, marker='o', ms=3, legend=False)
         plt.tight_layout()
@@ -69,7 +69,7 @@ class Time_series_analysis(Data_loader):
         else:
             fig.show()
 
-    def season_plot(self, temp_df, sample='M'):
+    def season_plot(self, temp_df, item_title, sample='M'):
         t_select = temp_df.columns[0]
         temp_df = temp_df.resample(sample).sum()
         temp_df.loc[:, 'year'] = temp_df.index.year
@@ -93,7 +93,7 @@ class Time_series_analysis(Data_loader):
         else:
             plt.show()
 
-    def seasonal_decompose_plot(self, temp_df, sample='M'):
+    def seasonal_decompose_plot(self, temp_df, item_title, sample='M'):
         temp_df = temp_df.resample(sample).sum()
         temp_df_add = seasonal_decompose(temp_df.loc[:, temp_df.columns[0]],
                                          model='additive',

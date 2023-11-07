@@ -6,6 +6,8 @@ import datetime
 raw_dir = 'data/green_raw/'
 output_dir = 'data/green.parquet'
 nyc_shapefile_dir = 'data/NYC_Shapefile/NYC.shp'
+borough_lst = ['Bronx', 'Brooklyn', 'Manhattan', 'Queens']
+target_lst = ['Counts', 'Fare']
 
 
 # @st.cache(allow_output_mutation=True)  # buffer the output
@@ -64,14 +66,21 @@ def main():
         }
 
         choice = st.selectbox("Choose a Visualization:", list(options.keys()))
+        choice_borough = st.selectbox("Choose a Borough:", list(borough_lst))
+        choice_type = st.selectbox("Choose a Target:", list(target_lst))
         choice_sample = st.selectbox("Choose a Seasonal Analysis sample-rate:", list(options_sample.keys()))
 
-
         if st.button("Show Visualization"):
+            filter_con = choice_type
+            select = choice_borough
+            pivot_counts, pivot_fare = vis.data_pivot(df)
+            item_title, temp_df = vis.select_df(filter_con, select, pivot_counts, pivot_fare)
+
             if choice == "Time Series Plot":
-                options[choice]()  # (filter_con)
+                options[choice](temp_df=temp_df, select=select, item_title=item_title)  # (filter_con)
             elif choice == "Seasonal Time Seriesn Analysis" or choice == "Decomposing Analysis":
-                options[choice](sample=options_sample[choice_sample])  # (filter_con)
+                options[choice](temp_df=temp_df, item_title=item_title,
+                                sample=options_sample[choice_sample])  # (filter_con)
 
     else:
         st.write('Please select a date range and click "Load Data" to view visualizations.')
