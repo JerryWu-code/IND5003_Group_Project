@@ -9,9 +9,9 @@ Here, we're thrilled to guide you through Exploratory Data Analysis (EDA), provi
 of the evolving Green Taxi in NYC. Our user-friendly Streamlit app introduces you to two engaging functionalities, 
 allowing you to dive into the data and make meaningful discoveries:
 
-**Feature1:Multifactors Exploring Data Visualization**
-- Choose a key factor from our curated list of features, each offering unique insights.
-- Use our filter to select a specific scope to reveal dynamic trends from 202201-202307.
+**Feature1: Multifactorial Data Exploration Visualization**
+- **Discover Trends Over Time**: Apply our filters to examine shifts and patterns from January 2019 to July 2023, capturing the essence of dynamic market trends.
+- **Tailored Insight Curation**: Select from our specially chosen visualization features, each crafted to provide a distinct perspective on key influencing factors.
 
 **Feature2:Geo-Visualization**
 - **Unveil the pulse of the city**: Geo-Visualization gives you a clear view of taxi demand in every area, 
@@ -31,9 +31,9 @@ in service delivery and operational efficiency.
 ARIMA modeling to forecast taxi demand with greater accuracy, enabling you to make informed decisions 
 that resonate with the pulse of boroughs in NYC.
 
-**Feature4:Regression Analysis**
-- Customize your analysis by selecting a feature and a time period of interest.
-- Explore statistical measures and insightful scopes.
+**Feature4: Regression Analysis**
+- **Decoding Cost Influencers**: Delve into the complex web of factors impacting taxi fares through our Regression Analysis. By correlating trip costs with elements like temperature, passenger numbers, rainfall, boarding times, and journey distance, our feature enables a refined fare-setting process that mirrors actual conditions.
+- **Model Selection & Insights**: Choose from our suite of advanced models including Decision Tree, XGBoost, and Gradient Boosting to analyze regression outcomes and visualize the significance of each predictor in fare determination.
 
 Our goal is to make data exploration accessible and insightful. Engage with the data, discover trends, and deepen 
 your understanding of the Green Taxi in NYC so that taxi company could utilize our dashboard to analyze 
