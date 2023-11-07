@@ -9,7 +9,7 @@ nyc_shapefile_dir = 'data/NYC_Shapefile/NYC.shp'
 borough_lst = ['Bronx', 'Brooklyn', 'Manhattan', 'Queens']
 target_lst = ['Counts', 'Fare']
 # Clear all caches
-st.experimental_set_query_params(clear_cache=True)
+# st.experimental_set_query_params(clear_cache=True)
 
 
 # @st.cache_data  # buffer the output
@@ -54,7 +54,7 @@ def main():
         vis = Time_series_analysis.Time_series_analysis(raw_dir, output_dir, nyc_shapefile_dir, data=df, if_st=True)
         options = {
             "Time Series Plot": vis.time_series,
-            "Seasonal Time Seriesn Analysis": vis.season_plot,
+            "Seasonal Time Series Analysis": vis.season_plot,
             "Decomposing Analysis": vis.seasonal_decompose_plot,
         }
 
@@ -79,8 +79,8 @@ def main():
             item_title, temp_df = vis.select_df(filter_con, select, pivot_counts, pivot_fare)
 
             if choice == "Time Series Plot":
-                options[choice]  # (filter_con)
-            elif choice == "Seasonal Time Seriesn Analysis" or choice == "Decomposing Analysis":
+                options[choice](temp_df=temp_df, select=select, item_title=item_title)  # (filter_con)
+            elif choice == "Seasonal Time Series Analysis" or choice == "Decomposing Analysis":
                 options[choice](temp_df=temp_df, item_title=item_title,
                                 sample=options_sample[choice_sample])  # (filter_con)
 

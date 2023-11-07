@@ -1,6 +1,7 @@
 from my_scripts import Regression, Data_loader, Time_series_analysis
 import streamlit as st
 import datetime
+import pandas as pd
 
 # Set path
 raw_dir = 'data/green_raw/'

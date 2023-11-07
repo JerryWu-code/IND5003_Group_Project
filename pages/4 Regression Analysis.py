@@ -22,8 +22,6 @@ def main():
     st.title("Regression Analysis")
 
     time_range = "2022-01-01_2022-12-31"
-    # Clear all caches before loading new data
-    st.experimental_clear_cache()
     # Load data with caching
     df = load_data(time_range)
 
