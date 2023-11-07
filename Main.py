@@ -21,8 +21,15 @@ allowing you to easily identify potential markets and hotspots to optimize your 
 , keeping you competitive in the market.
 
 **Feature3:Time Series Analysis**
-- Customize your analysis by selecting a feature and a time period of interest.
-- Explore statistical measures and insightful scopes.
+- **Harness the rhythm of demand**: Our Time Series Analysis feature allows you to track and analyze seasonal 
+trends and decompose them into actionable insights, equipping your taxi service with the foresight to match 
+fleet availability to the ebb and flow of urban travel needs.
+- **Dive deep with Decomposing Analysis**: Break down complex order patterns into trend, seasonality, 
+and residuals to fine-tune your strategic responses to market dynamics, ensuring you stay ahead of the curve 
+in service delivery and operational efficiency.
+- **Predict to prosper**: Blend the simplicity of Seasonal Naive Prediction with the sophistication of 
+ARIMA modeling to forecast taxi demand with greater accuracy, enabling you to make informed decisions 
+that resonate with the pulse of boroughs in NYC.
 
 **Feature4:Regression Analysis**
 - Customize your analysis by selecting a feature and a time period of interest.
