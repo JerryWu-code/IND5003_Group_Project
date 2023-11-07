@@ -9,23 +9,16 @@ import pmdarima as pm
 borough_lst = ['Bronx', 'Brooklyn', 'Manhattan', 'Queens']
 
 
-class Time_series_analysis:
-    def __init__(self, df, whole_time, if_st=True):
-        self.whole_time = whole_time
-        self.data = df
-        self.df_counts, self_df_fare = self.load_time_series_data(whole_time)
-
-    def load_time_series_data(self):
-        start = time_range.split("_")[0]
-        end = time_range.split("_")[1]
-        dt = self.data[(self.data['DATE'] >= start) & (self.data['DATE'] <= end)].reset_index(drop=True)
-        dt['PU_Day_Count'] = dt.groupby(
-            by=['DATE', 'PU_Borough'])['VendorID'].transform('count')
-        dt['PU_Day_Avg_Fare'] = dt.groupby(
-            by=['DATE', 'PU_Borough'])['total_amount'].transform(
-            lambda x: round(np.average(x), 2))
-
-        return df_counts, df_fare
+class Time_series_analysis(Data_loader):
+    def __init__(self, raw_dir, output_dir, nyc_shapefile_dir, data, pred_time_range=None, if_st=True):
+        # noinspection PyCompatibility
+        super().__init__(raw_dir, output_dir, nyc_shapefile_dir)
+        self.data = data
+        self.if_st = if_st
+        self.pred_time_range = pred_time_range
+        self.rmse_mean = None
+        self.rmse_snaive = None
+        self.rmse_arima = None
 
     def data_pivot(self, dt):
         dt['DATE'] = pd.to_datetime(dt['DATE'])
@@ -64,10 +57,13 @@ class Time_series_analysis:
         return item_title, temp_df
 
     def time_series(self, temp_df):
-        fig = plt.figure(figsize=(10, 5))
+        fig1 = plt.figure(figsize=(10, 5))
         temp_df[select].plot(title=item_title, marker='o', ms=3, legend=False)
         plt.tight_layout()
-        plt.show()
+        if self.if_st:
+            st.pyplot(fig1)
+        else:
+            fig.show()
 
     def season_plot(self, temp_df, sample='M'):
         t_select = temp_df.columns[0]
@@ -79,7 +75,7 @@ class Time_series_analysis:
         color_ids = np.linspace(0, 1, num=len(yrs))
         colors_to_use = plt.cm.plasma(color_ids)
 
-        plt.figure(figsize=(12, 8))
+        fig2 = plt.figure(figsize=(12, 8))
 
         for i, yr in enumerate(yrs):
             df_tmp = temp_df.loc[temp_df.year == yr, :]
@@ -88,7 +84,10 @@ class Time_series_analysis:
         plt.title('Season Plot: {}'.format(item_title))
         plt.xlim(0, 13)
         plt.xticks(np.arange(1, 13), calendar.month_abbr[1:13])
-        plt.show()
+        if self.if_st:
+            st.pyplot(fig2)
+        else:
+            plt.show()
 
     def seasonal_decompose_plot(self, temp_df, sample='M'):
         temp_df = temp_df.resample(sample).sum()
@@ -96,7 +95,7 @@ class Time_series_analysis:
                                          model='additive',
                                          extrapolate_trend='freq')
         # temp_df_add.plot();
-        fig, (ax0, ax1, ax2, ax3) = plt.subplots(4, 1, figsize=(12, 9))
+        fig3, (ax0, ax1, ax2, ax3) = plt.subplots(4, 1, figsize=(12, 9))
         temp_df_add.observed.plot(ax=ax0)
         ax0.title.set_text('Seasonal Decompose Plot: {}'.format(item_title))
         temp_df_add.trend.plot(ax=ax1)
@@ -106,7 +105,10 @@ class Time_series_analysis:
         temp_df_add.resid.plot(ax=ax3, lw=0, marker="o")
         ax3.axhline(y=0, color='black')
         ax3.set_ylabel('Resid')
-        plt.show()
+        if self.if_st:
+            st.pyplot(fig3)
+        else:
+            plt.show()
 
     def seasonal_naive_pred(self, temp_df,
                             sample='M',
@@ -125,21 +127,27 @@ class Time_series_analysis:
         mean_forecast = ts.meanf(train_set[select], cut_point)
         snaive_forecast = ts.snaive(train_set[select], cut_point, regular_period)
 
+        # Save the rmse of mean and snaive prediction
+        self.rmse_mean = ts.rmse(test_set[select].values, mean_forecast)
+        self.rmse_snaive = ts.rmse(test_set[select].values, snaive_forecast)
+
         # Plot the predictions and true values
-        plt.figure(figsize=(12, 8))
+        fig1 = lt.figure(figsize=(12, 8))
         ax = train_set[select].plot(
             title='Seasonal Naive Prediction: {}'.format(item_title), legend=False)
         test_set[select].plot(ax=ax, legend=False, style='--')
         mean_forecast.plot(ax=ax, legend=False, style='-')
         snaive_forecast.plot(ax=ax, legend=False, style='-')
         plt.legend(labels=['train', 'test', 'mean', 'snaive'], loc='lower right')
-        plt.show()
-        for x in [ts.rmse]:  # , ts.mae, ts.smape]:
-            print('{0},mean: {1:.3f}'.format(
-                x.__name__, x(test_set[select].values, mean_forecast.values)))
-            print('{0},snaive: {1:.3f}'.format(
-                x.__name__, x(test_set[select].values, snaive_forecast.values)))
-            print('---')
+        if self.if_st:
+            st.pyplot(fig1)
+        else:
+            plt.show()
+
+        print('{0},mean: {1:.3f}'.format(ts.rmse.__name__, self.rmse_mean))
+        print('{0},snaive: {1:.3f}'.format(ts.rmse.__name__, self.rmse_snaive))
+        print('---')
+
         return mean_forecast, snaive_forecast
 
     def arima_pred(self, temp_df, sample='D', m=7, test_train_rate=1 / 10):
@@ -148,31 +156,36 @@ class Time_series_analysis:
         train_set = temp_df.iloc[:-cut_point, ]
         test_set = temp_df.iloc[-cut_point:, ]
 
-        arima_m1 = pm.auto_arima(train_set.values, seasonal=True, m=7, test='adf', suppress_warnings=True)
+        # Train the arima model on the train set
+        arima_m1 = pm.auto_arima(train_set.values, seasonal=True, m=m, test='adf', suppress_warnings=True)
 
-        return arima_m1
-
-    def arima_draw(self, temp_df):
-        temp_df = temp_df.resample('D').sum()
-        cut_point = int(len(temp_df) * 0.1)
-        train_set = temp_df.iloc[:-cut_point, ]
-        test_set = temp_df.iloc[-cut_point:, ]
-        print('rmse arima:', ts.rmse(test_set[select].values, arima_m1.predict(n_periods=len(test_set))))
-
+        # Use the trained arima model to do the prediction
         n_periods = len(test_set)
         fc, confint = arima_m1.predict(n_periods=n_periods, return_conf_int=True)
 
+        # Save the rmse of arima
+        self.rmse_arima = ts.rmse(test_set[select].values, arima_m1.predict(n_periods=len(test_set)))
+
+        # Set the attributes for the prediction figure
         ff = pd.Series(fc, index=test_set.index)
         lower_series = pd.Series(confint[:, 0], index=test_set.index)
         upper_series = pd.Series(confint[:, 1], index=test_set.index)
 
-        plt.figure(figsize=(12, 8))
+        fig2 = plt.figure(figsize=(12, 8))
         plt.plot(train_set)
         plt.plot(ff, color='red', label='Forecast')
         plt.fill_between(lower_series.index, lower_series, upper_series, color='gray', alpha=.15)
         plt.plot(test_set, 'g--', label='True')
         plt.legend()
-        plt.show()
+        if self.if_st:
+            st.pyplot(fig2)
+        else:
+            plt.show()
+
+        print('{0},snaive: {1:.3f}'.format(ts.rmse.__name__, self.rmse_arima))
+        print('---')
+
+        return arima_m1
 
 
 if __name__ == '__main__':
