@@ -13,7 +13,7 @@ st.experimental_set_query_params(clear_cache=True)
 
 
 # @st.cache_data  # buffer the output
-@st.cache_data(allow_output_mutation=True)
+@st.cache_data()
 def load_data(time_range):
     data_loader = Data_loader.Data_loader(raw_dir=raw_dir, output_dir=output_dir,
                                           nyc_shapefile_dir=nyc_shapefile_dir)
