@@ -17,13 +17,12 @@
 │   ├── Visualization.py
 │   ├── __pycache__
 │   └── ts.py
-├── others
-│   ├── Cart.png
-│   ├── README_old.md
-│   └── Script_1.docx
 ├── pages
 │   ├── 1 Multivariable-Visualization.py
 │   ├── 2 Geo-Visualization.py
+│   ├── 3 Time-Series-Analysis.py
 │   ├── 3 Time-Series-Prediction.py
 │   └── 4 Regression Analysis.py
+├── report
+│   └── IND5003_PG04_Green_Taxi_NYC.pdf
 └── requirements.txt

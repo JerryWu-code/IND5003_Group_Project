@@ -11,7 +11,7 @@ markdown-it-py==3.0.0
 matplotlib==3.7.2
 numpy==1.25.2
 osmnx==1.7.1
-pandas~=2.0.3
+pandas=2.0.3
 plotly==5.18.0
 ply==3.11
 pyarrow==13.0.0

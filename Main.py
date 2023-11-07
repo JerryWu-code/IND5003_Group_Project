@@ -15,14 +15,14 @@ capturing the essence of dynamic market trends.
 - **Tailored Insight Curation**: Select from our specially chosen visualization features, 
 each crafted to provide a distinct perspective on key influencing factors.
 
-**Feature2:Geo-Visualization**
+**Feature2: Geo-Visualization**
 - **Unveil the pulse of the city**: Geo-Visualization gives you a clear view of taxi demand in every area, 
 allowing you to easily identify potential markets and hotspots to optimize your service deployment.
 - **Strategy for success**: Harness our geospatial analysis tools to fine-tune pricing strategies
 , implementing dynamic pricing in high-traffic areas while promoting growth in emerging demand zones
 , keeping you competitive in the market.
 
-**Feature3:Time Series Analysis**
+**Feature3: Time Series Analysis**
 - **Harness the rhythm of demand**: Our Time Series Analysis feature allows you to track and analyze seasonal 
 trends and decompose them into actionable insights, equipping your taxi service with the foresight to match 
 fleet availability to the ebb and flow of urban travel needs.
