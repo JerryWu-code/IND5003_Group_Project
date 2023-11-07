@@ -6,6 +6,8 @@ import datetime
 raw_dir = 'data/green_raw/'
 output_dir = 'data/green.parquet'
 nyc_shapefile_dir = 'data/NYC_Shapefile/NYC.shp'
+borough_lst = ['Bronx', 'Brooklyn', 'Manhattan', 'Queens']
+target_lst = ['Counts', 'Fare']
 
 
 # @st.cache(allow_output_mutation=True)  # buffer the output
@@ -20,6 +22,10 @@ def load_data(time_range):
 def main():
     st.title("Time Series Prediction")
 
+    if 'loaded_data' not in st.session_state:
+        st.session_state['loaded_data'] = None
+        st.session_state['time_range'] = None
+
     # Define the minimum and maximum dates available for selection
     min_date = datetime.date(2019, 1, 1)
     max_date = datetime.date(2023, 7, 31)
@@ -32,41 +38,57 @@ def main():
         value=(min_date, max_date)  # Default range
     )
 
-    # Load data with caching
-    time_range = "2019-01-01_2023-07-31"
-    df = load_data(time_range)
-
     # Convert selected dates to the required string format
     pred_time_range = "{0}_{1}".format(start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
 
-    # Initialize the object
-    vis = Time_series_analysis.Time_series_analysis(raw_dir, output_dir, nyc_shapefile_dir,
-                                                    pred_time_range=pred_time_range, data=df, if_st=True)
-
     if st.button('Load Data'):
-        st.session_state['time_range'] = time_range
+        st.session_state['time_range'] = pred_time_range
         # Load data with caching
-        st.session_state['loaded_data'] = load_data(time_range)
+        st.session_state['loaded_data'] = load_data(pred_time_range)
 
-    # time_range = "2022-01-01_2023-07-31"
-    # Load data with caching
     if st.session_state['loaded_data'] is not None:
+        # Load data with caching
         df = st.session_state['loaded_data']
-        # df = load_data(time_range)
-        vis = Visualization.Visualization(raw_dir, output_dir, nyc_shapefile_dir, pred_time_range=None, data=df,
-                                          if_st=True)
+        # Initialize the object
+        vis = Time_series_analysis.Time_series_analysis(raw_dir, output_dir, nyc_shapefile_dir,
+                                                        pred_time_range=pred_time_range,
+                                                        data=df,
+                                                        if_st=True)
         options = {
-            "Time Series": vis.region_analysis,
-            "Interactive Regional Analysis": vis.plotly_region_interactgraph
+            "Seasonal Naive Prediction": vis.seasonal_naive_pred,
+            "Arima Naive Prediction": vis.arima_pred
+        }
+
+        options_sample = {
+            'Day': 'D',
+            '1 Week': 'W',
+            '2 Week': '2W',
+            '3 Week': '3W',
+            'Month': 'M',
+            'Quarter': 'Q',
         }
 
         choice = st.selectbox("Choose a Visualization:", list(options.keys()))
+        choice_borough = st.selectbox("Choose a Borough:", list(borough_lst))
+        choice_type = st.selectbox("Choose a Target:", list(target_lst))
+        choice_rate = st.selectbox("Choose a rate of test set over sum:", [0.1, 0.2, 0.3])
+        choice_period = st.selectbox("Choose a Regular Period:", [1, 2, 3, 4, 5, 6, 7, 30, 90])
+        choice_sample = st.selectbox("Choose a Analysis sample-rate:", list(options_sample.keys()))
 
         if st.button("Show Visualization"):
-            if choice == "Regional Analysis":
-                options[choice](area_range='zip')  # (filter_con)
-            elif choice == "Interactive Regional Analysis":
-                options[choice](area_range='zip', target='Fare')  # (filter_con)
+            filter_con = choice_type
+            select = choice_borough
+            pivot_counts, pivot_fare = vis.data_pivot(df)
+            item_title, temp_df = vis.select_df(filter_con, select, pivot_counts, pivot_fare)
+
+            if choice == "Seasonal Naive Prediction":
+                options[choice](temp_df, select, item_title,
+                                sample=options_sample[choice_sample],
+                                regular_period=choice_period,
+                                test_train_rate=choice_rate)  # (filter_con)
+            elif choice == "Arima Naive Prediction":
+                options[choice](temp_df, select, item_title, sample=options_sample[choice_sample], m=choice_period,
+                                test_train_rate=choice_rate)  # (filter_con)
 
     else:
         st.write('Please select a date range and click "Load Data" to view visualizations.')

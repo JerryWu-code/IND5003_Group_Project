@@ -114,8 +114,8 @@ class Time_series_analysis(Data_loader):
         else:
             plt.show()
 
-    def seasonal_naive_pred(self, temp_df,
-                            sample='M',
+    def seasonal_naive_pred(self, temp_df, select, item_title,
+                            sample='D',
                             regular_period=7,
                             test_train_rate=1 / 10):  # 7~Week 90~Season 365~year
         temp_df = temp_df.resample(sample).sum()
@@ -154,7 +154,7 @@ class Time_series_analysis(Data_loader):
 
         return mean_forecast, snaive_forecast
 
-    def arima_pred(self, temp_df, sample='D', m=7, test_train_rate=1 / 10):
+    def arima_pred(self, temp_df, select, item_title, sample='D', m=7, test_train_rate=1 / 10):
         temp_df = temp_df.resample(sample).sum()
         cut_point = int(len(temp_df) * test_train_rate)
         train_set = temp_df.iloc[:-cut_point, ]
@@ -180,6 +180,7 @@ class Time_series_analysis(Data_loader):
         plt.plot(ff, color='red', label='Forecast')
         plt.fill_between(lower_series.index, lower_series, upper_series, color='gray', alpha=.15)
         plt.plot(test_set, 'g--', label='True')
+        plt.title(title='Arima Prediction: {}'.format(item_title))
         plt.legend()
         if self.if_st:
             st.pyplot(fig2)
