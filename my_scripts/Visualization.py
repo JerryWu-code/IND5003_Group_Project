@@ -328,7 +328,8 @@ class Visualization(Data_loader):
 
     def plot_trip_type_factors(self, filter_con=None):
 
-        passenger_counts = self.data.groupby(['passenger_count', 'trip_type']).size().unstack(fill_value=0).reset_index()
+        passenger_counts = self.data.groupby(['passenger_count', 'trip_type']).size().unstack(
+            fill_value=0).reset_index()
         passenger_counts.columns.name = None  # Remove the column index name
 
         # Calculate proportions for plotting

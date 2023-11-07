@@ -11,6 +11,7 @@ target_lst = ['Counts', 'Fare']
 # Clear all caches
 st.experimental_set_query_params(clear_cache=True)
 
+
 # @st.cache_data  # buffer the output
 @st.cache_data(allow_output_mutation=True)
 def load_data(time_range):

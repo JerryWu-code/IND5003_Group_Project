@@ -8,6 +8,7 @@ nyc_shapefile_dir = 'data/NYC_Shapefile/NYC.shp'
 # Clear all caches
 st.experimental_set_query_params(clear_cache=True)
 
+
 # @st.cache_data  # buffer the output
 @st.cache_data(allow_output_mutation=True)
 def load_data(time_range):
@@ -19,7 +20,7 @@ def load_data(time_range):
 
 def main():
     st.title("Regression Analysis")
-    
+
     time_range = "2022-01-01_2022-12-31"
     # Clear all caches before loading new data
     st.experimental_clear_cache()
@@ -29,7 +30,7 @@ def main():
     reg = Regression.Regression(raw_dir, output_dir, nyc_shapefile_dir, data=df, if_st=True)
     feature_columns = ['AVG_T', 'pickup_hour', 'passenger_count', 'distance', 'Rainfall']
     target_column = 'total_amount'
-    options = {       
+    options = {
         "Decision Tree": reg.decision_tree_regression,
         "XGBoost": reg.xgboost_regression,
         "Gradient Boosting": reg.GB_regression,
@@ -39,7 +40,7 @@ def main():
 
     if st.button("Show Analysis Results"):
         options[choice](feature_columns, target_column)
-   
+
 
 if __name__ == "__main__":
     main()

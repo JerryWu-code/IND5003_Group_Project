@@ -11,6 +11,7 @@ import pandas as pd
 import streamlit as st
 from my_scripts.Data_loader import Data_loader
 
+
 class Regression(Data_loader):
     def __init__(self, raw_dir, output_dir, nyc_shapefile_dir, data, if_st=True):
         Data_loader.__init__(self, raw_dir, output_dir, nyc_shapefile_dir)
@@ -18,7 +19,7 @@ class Regression(Data_loader):
         super().__init__(raw_dir, output_dir, nyc_shapefile_dir)
         self.data = data
         self.if_st = if_st
-        
+
     def GB_regression(self, feature_columns, target_column):
         """
         Performs a full regression analysis including data preparation, model training,
@@ -73,13 +74,13 @@ class Regression(Data_loader):
             st.dataframe(performance_metrics)
         else:
             display(performance_metrics.style.hide(axis='index').set_caption("Performance Metrics"))
-        
+
         # Get and plot feature importances
         feature_importances = pd.DataFrame({
             'Feature': feature_columns,
             'Importance': model.feature_importances_
         }).sort_values('Importance', ascending=False)
-        
+
         fig, ax = plt.subplots(figsize=(10, 6))
         sns.barplot(x='Importance', y='Feature', data=feature_importances, ax=ax)
         plt.title('Feature Importance')
@@ -90,8 +91,8 @@ class Regression(Data_loader):
         else:
             plt.show()
 
-        return model 
-        
+        return model
+
     def xgboost_regression(self, feature_columns, target_column):
         """
         Performs XGBoost regression analysis including data preparation, model training,
@@ -145,7 +146,7 @@ class Regression(Data_loader):
             st.dataframe(xgboost_performance_metrics)
         else:
             display(xgboost_performance_metrics.style.hide(axis='index').set_caption("Performance Metrics"))
-        
+
         # Feature importances
         feature_importances = pd.DataFrame({
             'Feature': feature_columns,
@@ -162,7 +163,7 @@ class Regression(Data_loader):
         else:
             plt.show()
         return xgboost_regressor
-        
+
     def decision_tree_regression(self, feature_columns, target_column):
         """
         Performs Decision Tree regression analysis including data preparation, model training,
@@ -210,7 +211,7 @@ class Regression(Data_loader):
             st.dataframe(dt_performance_metrics)
         else:
             display(dt_performance_metrics.style.hide(axis='index').set_caption("Performance Metrics"))
-            
+
         # Feature importances
         feature_importances = pd.DataFrame({
             'Feature': feature_columns,
@@ -226,5 +227,5 @@ class Regression(Data_loader):
             st.pyplot(fig)
         else:
             plt.show()
-            
+
         return decision_tree
