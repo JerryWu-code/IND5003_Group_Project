@@ -136,7 +136,7 @@ class Time_series_analysis(Data_loader):
         self.rmse_snaive = ts.rmse(test_set[select].values, snaive_forecast)
 
         # Plot the predictions and true values
-        fig1 = lt.figure(figsize=(12, 8))
+        fig1 = plt.figure(figsize=(12, 8))
         ax = train_set[select].plot(
             title='Seasonal Naive Prediction: {}'.format(item_title), legend=False)
         test_set[select].plot(ax=ax, legend=False, style='--')
@@ -180,7 +180,7 @@ class Time_series_analysis(Data_loader):
         plt.plot(ff, color='red', label='Forecast')
         plt.fill_between(lower_series.index, lower_series, upper_series, color='gray', alpha=.15)
         plt.plot(test_set, 'g--', label='True')
-        plt.title(title='Arima Prediction: {}'.format(item_title))
+        plt.title(label='Arima Prediction: {}'.format(item_title))
         plt.legend()
         if self.if_st:
             st.pyplot(fig2)
