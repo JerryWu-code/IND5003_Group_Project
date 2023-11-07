@@ -183,3 +183,12 @@ The demand might be related to the timely, daily, weekly, and monthly basis, so 
 
 ### Feature4: Regression Analysis
 
+**Relationship between trip cost and average temperature, number of passengers, rainfall, boarding time, and distance travelled.**
+
+#### (1) Decision Tree
+
+#### (2) XGBoost
+
+#### (3) Gradient Boosting
+
+
