@@ -6,7 +6,7 @@ This is the IND5003 Group Project Repo. And this is the members' table of our te
 | --------- | -------------- | ----------- | --------- | ---------- |
 | WU QILONG | XIANG XIAONENG | DONG XINYUE | QI SHUOLI | JIN YIXUAN |
 
-We currently use the free server so that we only provide part of funtions in the website demo due to limited server performance, and if you want to explore the whole features, you could clone this repo and deploy this locally. Here are the guidance for installation and the descriptions for **dataset** and **[demo](https://ind5003groupproject-pg04-greentaxi-nyc.streamlit.app/)**:
+We currently use the free server so that we only provide part of funtions in the website demo due to limited server performance, and if you want to explore the whole features, you could clone this repo and deploy this locally. Here are the guidance for installation and the descriptions for **dataset** and **[demo](https://ind5003groupproject-pg04-nyc-taxi.streamlit.app)**:
 
 
 

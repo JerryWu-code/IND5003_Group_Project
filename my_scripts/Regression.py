@@ -228,5 +228,3 @@ class Regression(Data_loader):
             plt.show()
             
         return decision_tree
-
-

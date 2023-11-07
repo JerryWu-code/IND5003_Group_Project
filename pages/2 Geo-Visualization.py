@@ -26,7 +26,7 @@ def main():
         st.session_state['time_range'] = None
 
     # Define the minimum and maximum dates available for selection
-    min_date = datetime.date(2019, 1, 1)
+    min_date = datetime.date(2023, 1, 1)
     max_date = datetime.date(2023, 7, 31)
 
     # Create a slider for the user to select a date range

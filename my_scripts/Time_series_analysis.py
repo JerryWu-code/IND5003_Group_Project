@@ -67,7 +67,7 @@ class Time_series_analysis(Data_loader):
         if self.if_st:
             st.pyplot(fig1)
         else:
-            fig.show()
+            plt.show()
 
     def season_plot(self, temp_df, item_title, sample='M'):
         t_select = temp_df.columns[0]
@@ -187,7 +187,7 @@ class Time_series_analysis(Data_loader):
         else:
             plt.show()
 
-        print('{0},snaive: {1:.3f}'.format(ts.rmse.__name__, self.rmse_arima))
+        print('{0},arima: {1:.3f}'.format(ts.rmse.__name__, self.rmse_arima))
         print('---')
 
         return arima_m1

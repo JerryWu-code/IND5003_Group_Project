@@ -90,6 +90,11 @@ def main():
                 options[choice](temp_df, select, item_title, sample=options_sample[choice_sample], m=choice_period,
                                 test_train_rate=choice_rate)  # (filter_con)
 
+            st.dataframe(pd.DataFrame({
+                'Prediction Method': ['Mean', 'Seasonal Naive', 'ARIMA'],
+                'RMSE': [vis.rmse_mean, vis.rmse_snaive, vis.rmse_arima]
+            }))
+
     else:
         st.write('Please select a date range and click "Load Data" to view visualizations.')
 
