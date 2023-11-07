@@ -10,8 +10,10 @@ of the evolving Green Taxi in NYC. Our user-friendly Streamlit app introduces yo
 allowing you to dive into the data and make meaningful discoveries:
 
 **Feature1: Multifactorial Data Exploration Visualization**
-- **Discover Trends Over Time**: Apply our filters to examine shifts and patterns from January 2019 to July 2023, capturing the essence of dynamic market trends.
-- **Tailored Insight Curation**: Select from our specially chosen visualization features, each crafted to provide a distinct perspective on key influencing factors.
+- **Discover Trends Over Time**: Apply our filters to examine shifts and patterns from January 2019 to July 2023, 
+capturing the essence of dynamic market trends.
+- **Tailored Insight Curation**: Select from our specially chosen visualization features, 
+each crafted to provide a distinct perspective on key influencing factors.
 
 **Feature2:Geo-Visualization**
 - **Unveil the pulse of the city**: Geo-Visualization gives you a clear view of taxi demand in every area, 
@@ -32,8 +34,12 @@ ARIMA modeling to forecast taxi demand with greater accuracy, enabling you to ma
 that resonate with the pulse of boroughs in NYC.
 
 **Feature4: Regression Analysis**
-- **Decoding Cost Influencers**: Delve into the complex web of factors impacting taxi fares through our Regression Analysis. By correlating trip costs with elements like temperature, passenger numbers, rainfall, boarding times, and journey distance, our feature enables a refined fare-setting process that mirrors actual conditions.
-- **Model Selection & Insights**: Choose from our suite of advanced models including Decision Tree, XGBoost, and Gradient Boosting to analyze regression outcomes and visualize the significance of each predictor in fare determination.
+- **Decoding Cost Influencers**: Delve into the complex web of factors impacting taxi fares through our 
+Regression Analysis. By correlating trip costs with elements like temperature, passenger numbers, rainfall, 
+boarding times, and journey distance, our feature enables a refined fare-setting process that mirrors actual conditions.
+- **Model Selection & Insights**: Choose from our suite of advanced models including Decision Tree, 
+XGBoost, and Gradient Boosting to analyze regression outcomes and visualize the significance of each predictor 
+in fare determination.
 
 Our goal is to make data exploration accessible and insightful. Engage with the data, discover trends, and deepen 
 your understanding of the Green Taxi in NYC so that taxi company could utilize our dashboard to analyze 
