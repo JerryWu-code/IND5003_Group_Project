@@ -1,4 +1,4 @@
-# IND5003_Group_Project
+# IND5003_PG04_Green_Taxi_NYC
 
 This is the IND5003 Group Project Repo. And this is the members' table of our team:
 
