@@ -91,6 +91,28 @@ streamlit run Main.py
 - We Collected data dating from **Jan 2022** to **Jul 2023** from this [website](https://www.nyc.gov/site/tlc/businesses/green-cab.page).
 - Tracking **taxi service & accessibility** in the **boroughs in New City**.
 - Respond to street hails but only in designated **green areas** (above W 110 St/E 96th St in Manhattan & in the boroughs)
+- The raw dataset provides green taxi observations for each day, including:
+
+|      Field Name       |                         Description                          |
+| :-------------------: | :----------------------------------------------------------: |
+|       VendorID        | LPEP provider (1 = Creative Mobile Technologies, LLC; 2 = VeriFone Inc) |
+| lpep_pickup_datetime  |           Date and time when the meter was engaged           |
+| lpep_dropoff_datetime |         Date and time when the meter was disengaged          |
+|    Passenger_count    |             Number of passengers in the vehicle              |
+|     Trip_distance     |                Elapsed trip distance in miles                |
+|     PULocationID      |               Taxi Zone taximeter was engaged                |
+|     DOLocationID      |              Taxi Zone taximeter was disengaged              |
+|      RateCodeID       | Final rate code in effect at the end of the trip (1=Standard rate; 2=JFK; 3=Newark; 4=Nassau or Westchester; 5=Negotiated fare; 6=Group ride) |
+|  Store and fwd flag   | Whether the trip record held in vehicle memory before being sent to vendor (Y=store and forward trip; N=not a store and forward trip) |
+|     Payment type      | How the passenger paid for the trip (1=Credit card; 2=Cash; 3=No charge; 4=Dispute; 5=Unknown; 6=Voided trip) |
+|      Fare_amount      |     The time-and-distance fare calculated by the meter.      |
+|         Extra         | Miscellaneous extras and surcharges (include 0.50 and 1 rush hour and overnight charges, respectively) |
+|        MTA_tax        | $0.50 MTA tax that is automatically triggered based on the metered rate in use. |
+| Improvement_surcharge | $0.30 improvement surcharge assessed on hailed trips at the flag drop |
+|      Tip_amount       | Tip amount (Automatically populated for credit card tips. Cash tips are not included.) |
+|     Tolls_amount      |           Total amount of all tolls paid in trip.            |
+|     Total_amount      | The total amount charged to passengers. Does not include cash tips |
+|       Trip_type       | Whether the trip was a street hail or a dispatch (1=Street hail; 2=Dispatch) |
 
 **A fraction of pickups in the dataset originate far outside New York City's** **borders**. To streamline our analysis and accommodate limited computational resources, we **only considered taxi trips originating from locations within the** **defined area**.
 
