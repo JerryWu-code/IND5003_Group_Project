@@ -1,5 +1,6 @@
 from my_scripts import Regression, Data_loader, Time_series_analysis
 import streamlit as st
+import datetime
 
 # Set path
 raw_dir = 'data/green_raw/'
@@ -18,6 +19,10 @@ def load_data(time_range):
 
 def main():
     st.title("Time Series Analysis")
+
+    if 'loaded_data' not in st.session_state:
+        st.session_state['loaded_data'] = None
+        st.session_state['time_range'] = None
 
     # Define the minimum and maximum dates available for selection
     min_date = datetime.date(2019, 1, 1)
@@ -66,7 +71,7 @@ def main():
             if choice == "Time Series Plot":
                 options[choice]()  # (filter_con)
             elif choice == "Seasonal Time Seriesn Analysis" or choice == "Decomposing Analysis":
-                options[choice](sample=choice_sample)  # (filter_con)
+                options[choice](sample=options_sample[choice_sample])  # (filter_con)
 
     else:
         st.write('Please select a date range and click "Load Data" to view visualizations.')

@@ -1,16 +1,20 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-from my_scripts import ts, Data_loader
+from my_scripts.Data_loader import Data_loader
+from my_scripts import ts
 from statsmodels.tsa.seasonal import seasonal_decompose, STL
 from statsmodels.tsa.arima_model import ARIMA
 import pmdarima as pm
+import numpy as np
+import calendar
 
 borough_lst = ['Bronx', 'Brooklyn', 'Manhattan', 'Queens']
 
 
 class Time_series_analysis(Data_loader):
     def __init__(self, raw_dir, output_dir, nyc_shapefile_dir, data, pred_time_range=None, if_st=True):
+        Data_loader.__init__(self, raw_dir, output_dir, nyc_shapefile_dir)
         # noinspection PyCompatibility
         super().__init__(raw_dir, output_dir, nyc_shapefile_dir)
         self.data = data
