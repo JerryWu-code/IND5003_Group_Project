@@ -6,10 +6,11 @@ import datetime
 raw_dir = 'data/green_raw/'
 output_dir = 'data/green.parquet'
 nyc_shapefile_dir = 'data/NYC_Shapefile/NYC.shp'
+# Clear all caches
+st.experimental_set_query_params(clear_cache=True)
 
-
-# @st.cache(allow_output_mutation=True)  # buffer the output
-@st.cache_data  # buffer the output
+# @st.cache_data  # buffer the output
+@st.cache_data(allow_output_mutation=True)
 def load_data(time_range):
     data_loader = Data_loader.Data_loader(raw_dir=raw_dir, output_dir=output_dir,
                                           nyc_shapefile_dir=nyc_shapefile_dir)
@@ -18,7 +19,7 @@ def load_data(time_range):
 
 
 def main():
-    st.title("Data Visualization")
+    st.title("Multivariable Visualization")
     # st.image('others/Cart.png', caption='Cart')
 
     if 'loaded_data' not in st.session_state:
