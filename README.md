@@ -88,7 +88,7 @@ streamlit run Main.py
 
 ### Part1: Green Taxi Dataset in New York City
 
-- We Collected data dating from **Jan 2022** to **Jul 2023** from this [website](https://www.nyc.gov/site/tlc/businesses/green-cab.page).
+- We Collected data dating from **Jan 2019** to **Jul 2023** from this [website](https://www.nyc.gov/site/tlc/businesses/green-cab.page).
 - Tracking **taxi service & accessibility** in the **boroughs in New City**.
 - Respond to street hails but only in designated **green areas** (above W 110 St/E 96th St in Manhattan & in the boroughs)
 - The raw dataset provides green taxi observations for each day, including:
